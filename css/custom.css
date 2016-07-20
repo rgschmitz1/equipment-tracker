@@ -1,0 +1,27 @@
+/* custom stylesheet */
+html {
+  position:relative;
+  min-height:100%;
+}
+body {
+  /* Margin top by header height */
+  padding-top:60px;
+  /* Margin bottom by footer height */
+  margin-bottom:60px;
+}
+.footer {
+  position:absolute;
+  bottom:0;
+  width:100%;
+  /* Set the fixed height of the footer here */
+  height:50px;
+}
+.dropdown:hover .dropdown-menu {
+  /* Trigger drop down on curser hover */
+  display:block;
+}
+.center-login {
+  width:280px;
+  margin:auto;
+  text-align:center;
+}
