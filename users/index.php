@@ -1,6 +1,6 @@
 <?php
 require_once('../header.php');
-$results = $api->dbQueryUsers();
+$results = $users_api->dbQueryUsers();
 ?>
 
 <div class="container">

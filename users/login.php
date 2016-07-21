@@ -13,7 +13,7 @@ if (!isset($_SESSION['id']) && isset($_POST['submit'])) {
         $error_msg = 'You must enter a valid username to login.';
     } else {
         // lookup user from the database
-        $data = $api->dbUserLogin($user_username);
+        $data = $users_api->dbUserLogin($user_username);
 
         if (count($data) == 0) {
             $error_msg = 'Invalid username entered, try again.';
@@ -23,7 +23,7 @@ if (!isset($_SESSION['id']) && isset($_POST['submit'])) {
             foreach ($data as $value) {
                 $_SESSION['id'] = $value['id'];
             }
-            $api->dbClose();
+            $users_api->dbClose();
             header('Location: ' . SITE_ROOT);
         } else {
             $error_msg = 'Duplicate username exists in database, admin must fix!';
@@ -50,9 +50,8 @@ if (empty($_SESSION['id'])) {
         <form method="post" action="<?= $_SERVER['PHP_SELF'] ?>">
             <fieldset>
                 <div class="form-group text-left">
-                    <label for="username" class="control-label">Username</label>
                     <input type="text" class="form-control" value="<?php if (!empty($user_username)) { echo $user_username; } ?>"
-                     id="username" name="username" placeholder="Username">
+                     id="username" name="username" placeholder="Username" required>
                 </div>
                 <div class="form-group">
                     <button type="submit" name="submit" class="btn btn-primary">Submit</button>

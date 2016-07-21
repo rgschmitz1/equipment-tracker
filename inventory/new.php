@@ -1,7 +1,11 @@
 <?php
 require_once('../header.php');
+require_once('inventorymanager.php');
+$inventory_api = new InventoryManager();
 
-$list = array('username' => 'Username');
+$list = array('Product' => 'Product',
+              'Description' => 'Description',
+              'Serial' => 'Serial');
 
 // If user has submitted form, check user input
 if (isset($_POST['submit'])) {
@@ -17,26 +21,18 @@ if (isset($_POST['submit'])) {
             $data["$key"] = $_POST["$key"];
         }
     }
-    // Check for duplicate username exists in database
+    // If no errors exist, input item info into database
     if (empty($error_msg)) {
-        $duplicate_username_results = $users_api->dbCheckDuplicateUser($data['username']);
+        $product = $data['Product'];
+        $description = $data['Description'];
+        $serial = $data['Serial'];
 
-        if ($duplicate_username_results > 0) {
-            $error_msg = 'Username <b>' . $data['username'] . '</b> already exists in database.';
-            $data['username'] = '';
-            $error['username'] = true;
-        }
-    }
-    // If no errors exist, input user info into database
-    if (empty($error_msg)) {
-        $username = $data['username'];
-
-        $result = $users_api->dbCreateUser($username);
+        $result = $inventory_api->dbNewProduct($product, $description, $serial);
         if ($result = 0) {
-            $users_api->dbError();
+            $inventory_api->dbError();
         } else {
-            $users_api->dbClose();
-            header("Location: index.php?user=$username");
+            $inventory_api->dbClose();
+            header("Location: index.php?item");
         }
     }
 }
@@ -55,29 +51,38 @@ if (!empty($error_msg)) {
 ?>
 
 <div class="well">
-    <legend>Add User</legend>
+    <legend>Add Product</legend>
     <form class="form-horizontal" action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
         <fieldset>
 
         <?php
-        // Display new user form below
+        // Display new item form below
         foreach ($list as $key => $value) {
             // Highlight form input as in error if flagged as having an issue
             if (isset($error["$key"]) && ($error["$key"])) {
-                echo '<div class="form-group has-error has-feedback">';
+                echo "<div class='form-group has-error has-feedback'>\n";
             } else {
-                echo '<div class="form-group">';
+                echo "<div class='form-group'>\n";
             }
-            echo "<label for='$key' class='col-sm-2 control-label'>$value</label>";
-            echo "<div class='col-sm-3'>";
-            ?>
-            <input type='text' class='form-control' name='<?= $key ?>' id='<?= $key ?>' <?php if (!empty($data["$key"])) { echo "value='" . $data["$key"] . "'" ; } ?> placeholder='<?= $value ?>' required>
-            <?php
+            echo "<label for='$key' class='col-sm-2 control-label'>$value</label>\n";
+            if ($key == 'Description') {
+                echo "<div class='col-sm-10'>\n";
+            } else {
+                echo "<div class='col-sm-3'>\n";
+            }
+            if ($key == 'Serial') {
+                echo "<input type='number' min='0' max='99999999' ";
+            } else {
+                echo "<input type='text' ";
+            }
+            echo "class='form-control' name='$key' id='$key' placeholder='$value' ";
+            if (!empty($data["$key"])) echo "value='" . $data["$key"] . "' ";
+            echo "required>\n";
             // If error is present with input, display error icon in input box
             if (isset($error["$key"]) && ($error["$key"])) {
-                echo '<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>';
+                echo "<span class='glyphicon glyphicon-remove form-control-feedback' aria-hidden='true'></span>\n";
             }
-            echo '</div></div>';
+            echo "</div>\n</div>\n";
         }
         ?>
 
@@ -89,7 +94,7 @@ if (!empty($error_msg)) {
         </fieldset>
     </form>
 </div>
+</div>
 
 <?php
-echo '</div>';
 include('../footer.php');
