@@ -4,6 +4,9 @@ class UserManager {
     const DB_USER = 'root';
     const DB_PASSWORD = '';
 
+    // Administrative user(s)
+    const ADMIN_ID = '2';
+
     // Set database connect variable
     private function dbConnect() {
         $dbc = new PDO('mysql:host=localhost;dbname=mfgtest', self::DB_USER, self::DB_PASSWORD)
