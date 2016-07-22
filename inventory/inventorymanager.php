@@ -48,7 +48,7 @@ class InventoryManager {
     function dbQueryProducts() {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "SELECT * FROM products";
+        $query = "SELECT a.*, b.username FROM products a, users b WHERE a.user_id=b.id";
         try {
             $sql = $dbc->prepare($query);
             $sql->execute();
@@ -58,6 +58,16 @@ class InventoryManager {
             echo $ex->getMessage();
         }
         return $results;
+    }
+    // Claim product
+    function dbClaimProduct($id, $user_id) {
+        $dbc = $this->dbConnect();
+        $query = "UPDATE products SET user_id=:user_id WHERE id=:id";
+        $query = $db->prepare($sql);
+        $query->bindParam(":id", $id);
+        $query->bindParam(":user_id", $user_id);
+        $query->execute();
+        return $query->rowCount();  //return the # of rows affected
     }
 
     // Close database connection

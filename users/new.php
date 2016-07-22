@@ -1,21 +1,17 @@
 <?php
 require_once('../header.php');
 
-$list = array('username' => 'Username');
-
 // If user has submitted form, check user input
 if (isset($_POST['submit'])) {
     $error_msg = '';
-    // Check each input is set
-    while (list($key,) = each($list)) {
-        $data["$key"] = '';
-        $error["$key"] = false;
-        if (!isset($_POST["$key"]) || empty($_POST["$key"])) {
-            $error_msg = 'All fields must be filled in, try again.';
-            $error["$key"] = true;
-        } else {
-            $data["$key"] = $_POST["$key"];
-        }
+    // Check username input is set
+    $data['username'] = '';
+    $error['username'] = false;
+    if (!isset($_POST['username']) || empty($_POST['username'])) {
+        $error_msg = 'All fields must be filled in, try again.';
+        $error['username'] = true;
+    } else {
+        $data['username'] = $_POST['username'];
     }
     // Check for duplicate username exists in database
     if (empty($error_msg)) {
@@ -61,24 +57,22 @@ if (!empty($error_msg)) {
 
         <?php
         // Display new user form below
-        foreach ($list as $key => $value) {
-            // Highlight form input as in error if flagged as having an issue
-            if (isset($error["$key"]) && ($error["$key"])) {
-                echo '<div class="form-group has-error has-feedback">';
-            } else {
-                echo '<div class="form-group">';
-            }
-            echo "<label for='$key' class='col-sm-2 control-label'>$value</label>";
-            echo "<div class='col-sm-3'>";
-            ?>
-            <input type='text' class='form-control' name='<?= $key ?>' id='<?= $key ?>' <?php if (!empty($data["$key"])) { echo "value='" . $data["$key"] . "'" ; } ?> placeholder='<?= $value ?>' required>
-            <?php
-            // If error is present with input, display error icon in input box
-            if (isset($error["$key"]) && ($error["$key"])) {
-                echo '<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>';
-            }
-            echo '</div></div>';
+        // Highlight form input as in error if flagged as having an issue
+        if (isset($error['username']) && ($error['username'])) {
+            echo '<div class="form-group has-error has-feedback">';
+        } else {
+            echo '<div class="form-group">';
         }
+        echo '<label for="username" class="col-sm-2 control-label">Username</label>';
+        echo '<div class="col-sm-3">';
+        echo '<input type="text" class="form-control" name="username" id="username" placeholder="Username"';
+        if (!empty($data['username'])) { echo "value='" . $data['username'] . "'" ; }
+        echo 'required>';
+        // If error is present with input, display error icon in input box
+        if (isset($error['username']) && ($error['username'])) {
+            echo '<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>';
+        }
+        echo '</div></div>';
         ?>
 
             <div class="form-group">

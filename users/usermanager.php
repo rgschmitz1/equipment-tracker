@@ -123,7 +123,7 @@ class UserManager {
             session_start();
         if (!isset($_SESSION['id'])) {
             $site_root = '/xes';
-            if (($_SERVER['PHP_SELF'] != "$site_root/users/login.php") && ($_SERVER['PHP_SELF'] != "$site_root/users/new.php")) {
+            if (($_SERVER['PHP_SELF'] != "$site_root/users/login.php") && ($_SERVER['PHP_SELF'] != "$site_root/users/adminlogin.php")) {
                 header("Location: $site_root/users/login.php");
             }
         }

@@ -27,8 +27,7 @@ $results = $users_api->dbQueryUsers();
 
         <?php foreach ($results as $record) { ?>
             <tr>
-                <?php $username = $record['username']; ?>
-                <td><?= $username ?></td>
+                <td><?= $record['username'] ?></td>
             </tr>
         <?php } ?>
 

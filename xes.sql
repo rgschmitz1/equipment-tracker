@@ -14,8 +14,9 @@ CREATE TABLE IF NOT EXISTS `products` (
     `product` VARCHAR(30),
     `description` VARCHAR(80),
     `serial` INT,
-    `user_id` INT,
+    `user_id` INT DEFAULT 1,
     PRIMARY KEY (`id`)
 );
 
+INSERT INTO `users` (username) VALUES ('unknown');
 INSERT INTO `users` (username, password) VALUES ('admin', SHA('admin'));

@@ -1,10 +1,9 @@
 <?php
 require_once('../header.php');
+require_once('inventorymanager.php');
+$inventory_api = new InventoryManager();
 
-$query = "SELECT a.*, b.username FROM products a, users b WHERE a.user_id=b.id";
-$result = $api->dbQuery($query);
-if (!$result)
-    $api->dbError($query);
+$results = $inventory_api->dbQueryProducts();
 ?>
 
 <div class="container">
@@ -15,33 +14,31 @@ if (!$result)
     </div>
     <?php } ?>
 
-    <h2>Inventory Management</h2>
-    <p><a href="new.php">Add New Inventory</a></p>
-</div>
-
-<div class="container-fluid">
+    <h2>Inventory Index</h2>
+    <p><a href="new.php">Add New Product</a></p>
     <!-- Start modify form -->
     <form class="form-inline" action="<?= SITE_ROOT ?>/inventory/modify.php" method="get" role="form">
     <table class="table table-bordered table-striped table-hover">
         <thead>
             <tr>
+                <th>Serial</th>
                 <th>Product</th>
                 <th>Description</th>
-                <th>Serial</th>
                 <th>Location</th>
                 <th>Modify</th>
             </tr>
         </thead>
         <tbody>
-
-        <?php while ($record = mysqli_fetch_array($result)) { ?>
+        <?php foreach ($results as $record) { ?>
             <tr>
+                <td><?= $record['serial'] ?></td>
                 <td><?= $record['product'] ?></td>
                 <td><?= $record['description'] ?></td>
-                <td><?= $record['serial'] ?></td>
-                <td><?= $record['username'] ?></td>
-                <td style="padding-top: 0px; padding-bottom: 0px;">
-                    <button type="submit" name="item_id" value="<?= $record['ItemID'] ?>" class="btn btn-default">Edit</button>
+                <td style="padding-top: 0px; padding-bottom: 0px">
+                    <button class="btn btn-default" id="btnUpdate" type="button"><?= $record['username'] ?></button>
+                </td>
+                <td style="padding-top: 0px; padding-bottom: 0px">
+                    <button class="btn btn-default" type="submit" name="item_id" value="<?= $record['ItemID'] ?>">Edit</button>
                 </td>
             </tr>
         <?php } ?>
@@ -52,6 +49,19 @@ if (!$result)
     <!-- End modify form -->
 
 </div>
+
+<!-- This doesn't currently work
+<script type="text/javascript">
+    $(document).ready(function() {
+        //js -> call InventoryService.php
+        $("#btnUpdate").click(function() {
+            $.ajax("InventoryService.php", {"data":{"id":$("#idToUpdate").val(),
+                                                    "user_id":$("#user_id").val(),
+                                                    "method":"PUT"});
+        });
+    })
+</script>
+-->
 
 <?php
 include('../footer.php');
