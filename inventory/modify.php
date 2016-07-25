@@ -1,5 +1,7 @@
 <?php
 require_once('../header.php');
+require_once('inventorymanager.php');
+$inventory_api = new InventoryManager();
 
 if (!isset($_GET['item_id']) && !isset($_POST['item_id'])) {
     header('Location: index.php');
@@ -9,25 +11,18 @@ if (!isset($_GET['item_id']) && !isset($_POST['item_id'])) {
     $itemid = $_POST['item_id'];
 }
 
-$updatelist = array('Brand',
-                    'Model',
-                    'Description',
-                    'Tested',
-                    'ItemCondition',
-                    'eBayItemNum',
-                    'eBayApproxPrice',
-                    'Location');
+$updatelist = array('Product' => 'product',
+                    'Description' => 'description',
+                    'Serial' => 'serial');
 
-$query = "SELECT * FROM Inventory WHERE ItemID = '$itemid'";
-$results = $api->dbQuery($query);
+$results = $inventory_api->dbFetchProduct($itemid);
 
 // There should be only one item that matches the item id in the database
-if (mysqli_num_rows($results) == 0) {
+if (count($results) == 0) {
     exit("<div class='container'>Invalid itemid #$itemid, try again.</div>");
-} elseif (mysqli_num_rows($results) == 1) {
-    $record = mysqli_fetch_array($results);
-    foreach ($updatelist as $key) {
-        $data["$key"] = $record["$key"];
+} elseif (count($results) == 3) {
+    foreach ($updatelist as $key => $value) {
+        $data["$key"] = $results["$value"];
     }
 }
 
@@ -35,12 +30,10 @@ if (mysqli_num_rows($results) == 0) {
 if (isset($_POST['submit'])) {
     $error_msg = '';
     // Check each input is set
-    foreach ($updatelist as $key) {
+    foreach ($updatelist as $key => $value) {
         $error["$key"] = false;
         if (isset($_POST["$key"]) && !empty($_POST["$key"])) {
-            $data["$key"] = $api->dbInputCheck($_POST["$key"]);
-        } elseif (("$key" == 'Tested') && empty($_POST["$key"])) {
-            $data["$key"] = 0;
+            $data["$key"] = $_POST["$key"];
         } else {
             $error_msg = 'All fields must be filled in, try again.';
             $error["$key"] = true;
@@ -48,26 +41,21 @@ if (isset($_POST['submit'])) {
     }
     // If no errors exist, input item info into database
     if (empty($error_msg)) {
-        $brand = $data['Brand'];
-        $model = $data['Model'];
+        $product = $data['Product'];
         $description = $data['Description'];
-        $tested = $data['Tested'];
-        $item_condition = $data['ItemCondition'];
-        $ebay_item_num = $data['eBayItemNum'];
-        $ebay_approx_price = $data['eBayApproxPrice'];
-        $location = $data['Location'];
+        $serial = $data['Serial'];
 
-        $query = "UPDATE Inventory SET Brand = '$brand', Model = '$model', Description = '$description',
-            Tested = '$tested', ItemCondition = '$item_condition', eBayItemNum = '$ebay_item_num',
-            eBayApproxPrice = '$ebay_approx_price', Location = '$location' WHERE ItemID = '$itemid'";
-
-        $result = $api->dbQuery($query);
-        if (!$result) {
-            echo $query;
-            $api->dbError();
+        if ($inventory_api->dbCheckDuplicateProduct($serial) == 0) {
+            $result = $inventory_api->dbModifyProduct($product, $description, $serial);
+            if ($result == 1) {
+                $inventory_api->dbClose();
+                header("Location: index.php?item");
+            } else {
+                $inventory_api->dbError();
+            }
         } else {
-            $api->dbClose();
-            header("Location: index.php?item");
+            $error['Serial'] = true;
+            $error_msg = 'Duplicate serial number found in database, check input and try again.';
         }
     }
 }
@@ -83,51 +71,40 @@ if (!empty($error_msg)) {
     </div>
     <?php
 }
-
-$list = array('Brand' => 'Brand',
-              'Model' => 'Model',
-              'Description' => 'Description',
-              'Tested' => 'Tested',
-              'ItemCondition' => 'Condition',
-              'eBayItemNum' => 'eBay Item #',
-              'eBayApproxPrice' => 'eBay Approx. Price',
-              'Location' => 'Location');
 ?>
 
 <div class="well">
-    <legend>Modify Item</legend>
+    <legend>Modify Product</legend>
     <form class="form-horizontal" action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
         <fieldset>
 
         <?php
         // Display modify item form below
         echo "<input type='hidden' name='item_id' value='$itemid'>";
-        foreach ($list as $key => $value) {
+        foreach ($updatelist as $key => $value) {
             // Highlight form input as in error if flagged as having an issue
             if (isset($error["$key"]) && ($error["$key"])) {
-                echo '<div class="form-group has-error has-feedback">';
+                echo "<div class='form-group has-error has-feedback'>\n";
             } else {
-                echo '<div class="form-group">';
+                echo "<div class='form-group'>\n";
             }
-            echo "<label for='$key' class='col-sm-2 control-label'>$value</label>";
+            echo "<label for='$key' class='col-sm-2 control-label'>$key</label>\n";
             if ($key == 'Description') {
-                echo "<div class='col-sm-10'>";
+                echo "<div class='col-sm-10'>\n";
             } else {
-                echo "<div class='col-sm-3'>";
+                echo "<div class='col-sm-3'>\n";
             }
-            if ($key != 'Tested') {
-                echo "<input type='text' class='form-control' name='$key' id='$key' value='" . $data["$key"] . "' placeholder='$value'>";
+            if ($key == 'Serial') {
+                echo "<input type='number' min='10000000' max='99999999' ";
             } else {
-            ?>
-                Yes <input id='<?= $key ?>' name='<?= $key ?>' type='radio' value='1' <?php if ($data["$key"] == 1) echo "checked='checked'" ?>>
-                No <input id='<?= $key ?>' name='<?= $key ?>' type='radio' value='0' <?php if ($data["$key"] == 0) echo "checked='checked'" ?>>
-            <?php
+                echo "<input type='text' ";
             }
+            echo "class='form-control' name='$key' id='$key' value='" . $data["$key"] . "' placeholder='$key' required>\n";
             // If error is present with input, display error icon in input box
             if (isset($error["$key"]) && ($error["$key"])) {
-                echo '<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>';
+                echo "<span class='glyphicon glyphicon-remove form-control-feedback' aria-hidden='true'></span>\n";
             }
-            echo '</div></div>';
+            echo "</div>\n</div>\n";
         }
         ?>
 
@@ -139,7 +116,7 @@ $list = array('Brand' => 'Brand',
         </fieldset>
     </form>
 </div>
+</div>
 
 <?php
-echo '</div>';
 include('../footer.php');

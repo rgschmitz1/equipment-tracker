@@ -1,5 +1,13 @@
 <?php
 require_once('../header.php');
+if (!$users_api->authorizeAdmin()) {
+    function shutdown()
+    {
+        require_once('../footer.php');
+    }
+    register_shutdown_function('shutdown');
+    exit('<div class="container">You must be an administrative user to access this page.</div>');
+}
 
 // If user has submitted form, check user input
 if (isset($_POST['submit'])) {
@@ -83,7 +91,7 @@ if (!empty($error_msg)) {
         </fieldset>
     </form>
 </div>
+</div>
 
 <?php
-echo '</div>';
 include('../footer.php');

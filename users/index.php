@@ -1,5 +1,13 @@
 <?php
 require_once('../header.php');
+if (!$users_api->authorizeAdmin()) {
+    function shutdown()
+    {
+        require_once('../footer.php');
+    }
+    register_shutdown_function('shutdown');
+    exit('<div class="container">You must be an administrative user to access this page.</div>');
+}
 $results = $users_api->dbQueryUsers();
 ?>
 
@@ -8,7 +16,7 @@ $results = $users_api->dbQueryUsers();
     <?php if (isset($_GET['user'])) { ?>
     <div class="alert alert-dismissible alert-success">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <p>Successfully added or updated user <b><?= $_GET['user'] ?></b>.</p>
+        <p>Successfully added user <b><?= $_GET['user'] ?></b>.</p>
     </div>
     <?php } ?>
 
@@ -27,7 +35,12 @@ $results = $users_api->dbQueryUsers();
 
         <?php foreach ($results as $record) { ?>
             <tr>
-                <td><?= $record['username'] ?></td>
+                <td>
+                    <?= $record['username'] ?>
+                    <div style="float: right; text-align: right">
+                        <button class="btn btn-danger btn-xs" onclick="deleteUser(<?= $record['id'] ?>)" type="button">Delete</button>
+                    </div>
+                </td>
             </tr>
         <?php } ?>
 

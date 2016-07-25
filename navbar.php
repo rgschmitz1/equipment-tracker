@@ -14,7 +14,7 @@
             </a>
         </div>
 
-    <?php if (isset($_SESSION['id'])) { ?>
+    <?php if (isset($_SESSION['xes_userid']) || isset($_SESSION['xes_adminid'])) { ?>
 
         <div class="collapse navbar-collapse" id="navbar-collapse-1">
             <ul class="nav navbar-nav">
@@ -23,6 +23,9 @@
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="<?= SITE_ROOT ?>/inventory/new.php">New</a></li>
                         <li><a href="<?= SITE_ROOT ?>/inventory/index.php">Index</a></li>
+        <?php if (!$users_api->authorizeAdmin()) { ?>
+                        <li><a href="<?= SITE_ROOT ?>/inventory/myinventory.php">My Index</a></li>
+        <?php } ?>
                     </ul>
                 </li>
         <?php if ($users_api->authorizeAdmin()) { ?>

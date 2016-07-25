@@ -27,12 +27,17 @@ if (isset($_POST['submit'])) {
         $description = $data['Description'];
         $serial = $data['Serial'];
 
-        $result = $inventory_api->dbNewProduct($product, $description, $serial);
-        if ($result = 0) {
-            $inventory_api->dbError();
+        if ($inventory_api->dbCheckDuplicateProduct($serial) == 0) {
+            $result = $inventory_api->dbNewProduct($product, $description, $serial);
+            if ($result == 0) {
+                $inventory_api->dbError();
+            } else {
+                $inventory_api->dbClose();
+                header("Location: index.php?item");
+            }
         } else {
-            $inventory_api->dbClose();
-            header("Location: index.php?item");
+            $error['Serial'] = true;
+            $error_msg = 'Duplicate serial number found in database, check input and try again.';
         }
     }
 }
@@ -71,7 +76,7 @@ if (!empty($error_msg)) {
                 echo "<div class='col-sm-3'>\n";
             }
             if ($key == 'Serial') {
-                echo "<input type='number' min='0' max='99999999' ";
+                echo "<input type='number' min='10000000' max='99999999' ";
             } else {
                 echo "<input type='text' ";
             }

@@ -4,9 +4,6 @@ class UserManager {
     const DB_USER = 'root';
     const DB_PASSWORD = '';
 
-    // Administrative user(s)
-    const ADMIN_ID = '2';
-
     // Set database connect variable
     private function dbConnect() {
         $dbc = new PDO('mysql:host=localhost;dbname=mfgtest', self::DB_USER, self::DB_PASSWORD)
@@ -14,24 +11,10 @@ class UserManager {
         return $dbc;
     }
 
-    // Check for duplicate user
-    function dbCheckTransactions($username, $request) {
-        $dbc = $this->dbConnect();
-        $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "SELECT request FROM transactions WHERE username=:username AND request=:request";
-        try {
-            $sql = $dbc->prepare($query);
-            $sql->bindParam(":username", $username);
-            $sql->bindParam(":request", $request);
-            $sql->execute();
-            return $sql->rowCount();
-        } catch(Exception $ex) {
-            echo "what the heck<br />";
-            echo $ex->getMessage();
-        }
-    }
     // Login user
     function dbUserLogin($username) {
+        if ($username == 'Unclaimed')
+            return;
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $query = "SELECT id FROM users WHERE username=:username";
@@ -49,27 +32,27 @@ class UserManager {
     function dbAdminUserLogin($username, $password) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "SELECT id FROM users WHERE username=:username AND password=:password";
+        $query = "SELECT id, password FROM adminusers WHERE username=:username";
         try {
             $sql = $dbc->prepare($query);
             $sql->bindParam(":username", $username);
-            $sql->bindParam(":password", $password);
             $sql->execute();
-            return $sql->fetchAll(PDO::FETCH_ASSOC);
+            $data = $sql->fetch(PDO::FETCH_ASSOC);
+            if (password_verify($password, $data['password']))
+                return $data['id'];
         } catch(Exception $ex) {
             echo "what the heck<br />";
             echo $ex->getMessage();
         }
     }
     // Create new user
-    function dbCreateUser($username, $password) {
+    function dbCreateUser($username) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "INSERT INTO users (username, password) VALUES (:username, :password)";
+        $query = "INSERT INTO users (username) VALUES (:username)";
         try {
             $sql = $dbc->prepare($query);
             $sql->bindParam(":username", $username);
-            $sql->bindParam(":password", $password);
             $sql->execute();
             return $sql->rowCount();
         } catch(Exception $ex) {
@@ -93,11 +76,11 @@ class UserManager {
             echo $ex->getMessage();
         }
     }
-    // Query database
+    // Query users
     function dbQueryUsers() {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "SELECT * FROM users";
+        $query = "SELECT * FROM users WHERE username NOT LIKE 'Unclaimed'";
         try {
             $sql = $dbc->prepare($query);
             $sql->execute();
@@ -124,7 +107,7 @@ class UserManager {
     function authenticateUser() {
         if (!isset($_SESSION))
             session_start();
-        if (!isset($_SESSION['id'])) {
+        if (!isset($_SESSION['xes_userid']) && !isset($_SESSION['xes_adminid'])) {
             $site_root = '/xes';
             if (($_SERVER['PHP_SELF'] != "$site_root/users/login.php") && ($_SERVER['PHP_SELF'] != "$site_root/users/adminlogin.php")) {
                 header("Location: $site_root/users/login.php");
@@ -136,10 +119,10 @@ class UserManager {
     function authorizeAdmin() {
         if (!isset($_SESSION))
             session_start();
-        if (!isset($_SESSION['id']) || ($_SESSION['id'] != self::ADMIN_ID)) {
-            return false;
-        } else {
+        if (isset($_SESSION['xes_adminid'])) {
             return true;
+        } else {
+            return false;
         }
     }
 }

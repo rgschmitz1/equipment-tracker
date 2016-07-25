@@ -5,7 +5,7 @@ require_once('../header.php');
 $error_msg = '';
 
 // If the user isn't logged in, try to log them in
-if (!isset($_SESSION['id']) && isset($_POST['submit'])) {
+if (!isset($_SESSION['xes_userid']) && isset($_POST['submit'])) {
     // grab username from input
     $user_username = $_POST['username'];
 
@@ -19,9 +19,9 @@ if (!isset($_SESSION['id']) && isset($_POST['submit'])) {
             $error_msg = 'Invalid username entered, try again.';
         } elseif (count($data) == 1) {
             // Login is OK, set the SESSION username and id, then redirect to homepage
-            $_SESSION['username'] = $user_username;
+            $_SESSION['xes_username'] = $user_username;
             foreach ($data as $value) {
-                $_SESSION['id'] = $value['id'];
+                $_SESSION['xes_userid'] = $value['id'];
             }
             $users_api->dbClose();
             header('Location: ' . SITE_ROOT);
@@ -34,14 +34,14 @@ if (!isset($_SESSION['id']) && isset($_POST['submit'])) {
 echo '<div class="container">';
 
 // Check if user is already logged in
-if (empty($_SESSION['id'])) {
+if (empty($_SESSION['xes_userid'])) {
     if (!empty($error_msg)) {
-        ?>
+    ?>
         <div class="alert alert-dismisable alert-danger">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <p><?= $error_msg ?></p>
         </div>
-        <?php
+    <?php
     }
     ?>
 
@@ -58,13 +58,13 @@ if (empty($_SESSION['id'])) {
                 </div>
             </fieldset>
         </form>
+        <p><a href="<?= SITE_ROOT ?>/users/adminlogin.php">Admin Login Page</a></p>
     </div>
 
-    <?php
+<?php
 } else {
-    echo '<p>You are logged in as <b>' . $_SESSION['username'] . '</b>.</p>';
+    echo '<p>You are logged in as <b>' . $_SESSION['xes_username'] . '</b>.</p>';
 }
 
 echo '</div>';
-
 require_once('../footer.php');

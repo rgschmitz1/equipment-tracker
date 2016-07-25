@@ -11,7 +11,24 @@ class InventoryManager {
         return $dbc;
     }
 
-    // Create new user
+    // Update product
+    function dbModifyProduct($product, $description, $serial) {
+        $dbc = $this->dbConnect();
+        $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $query = "UPDATE products SET product=:product, description=:description, serial=:serial";
+        try {
+            $sql = $dbc->prepare($query);
+            $sql->bindParam(":product", $product);
+            $sql->bindParam(":description", $description);
+            $sql->bindParam(":serial", $serial);
+            $sql->execute();
+            return $sql->rowCount();
+        } catch(Exception $ex) {
+            echo "what the heck<br />";
+            echo $ex->getMessage();
+        }
+    }
+    // Create new product
     function dbNewProduct($product, $description, $serial) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -27,9 +44,8 @@ class InventoryManager {
             echo "what the heck<br />";
             echo $ex->getMessage();
         }
-        return $db->lastInsertId();
     }
-    // Check for duplicate user
+    // Check for duplicate product
     function dbCheckDuplicateProduct($serial) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -44,7 +60,40 @@ class InventoryManager {
             echo $ex->getMessage();
         }
     }
-    // Query database
+    // Query one product by id
+    function dbFetchProduct($id) {
+        $dbc = $this->dbConnect();
+        $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $query = "SELECT product, description, serial FROM products WHERE id=:id";
+        try {
+            $sql = $dbc->prepare($query);
+            $sql->bindParam(":id", $id);
+            $sql->execute();
+            $results = $sql->fetch(PDO::FETCH_ASSOC);
+        } catch(Exception $ex) {
+            echo "what the heck<br />";
+            echo $ex->getMessage();
+        }
+        return $results;
+    }
+    // Query products by user_id
+    function dbQueryUserProducts() {
+        $dbc = $this->dbConnect();
+        $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        if (!isset($_SESSION))
+            session_start();
+        $query = "SELECT a.*, b.username FROM products a, users b WHERE a.user_id=b.id AND user_id=" . $_SESSION['xes_userid'];
+        try {
+            $sql = $dbc->prepare($query);
+            $sql->execute();
+            $results = $sql->fetchAll(PDO::FETCH_ASSOC);
+        } catch(Exception $ex) {
+            echo "what the heck<br />";
+            echo $ex->getMessage();
+        }
+        return $results;
+    }
+    // Query all products
     function dbQueryProducts() {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
