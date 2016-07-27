@@ -11,6 +11,22 @@ class InventoryManager {
         return $dbc;
     }
 
+    // Unclaim all products for specific user
+    function dbUnclaimAll($id) {
+        $dbc = $this->dbConnect();
+        $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $query = "UPDATE products SET user_id='1' WHERE user_id=:id";
+        try {
+            $sql = $dbc->prepare($query);
+            $sql->bindParam(":id", $id);
+            $sql->execute();
+            return true;
+        } catch(Exception $ex) {
+            echo "what the heck<br />";
+            echo $ex->getMessage();
+            return false;
+        }
+    }
     // Update product
     function dbModifyProduct($product, $description, $serial) {
         $dbc = $this->dbConnect();

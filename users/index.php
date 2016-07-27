@@ -22,9 +22,6 @@ $results = $users_api->dbQueryUsers();
 
     <h2>User Index</h2>
     <p><a href="new.php">Add New User</a></p>
-
-    <!-- Start modify form -->
-    <form class="form-inline" action="<?= SITE_ROOT ?>/users/modify.php" method="get" role="form">
     <table class="table table-bordered table-striped table-hover">
         <thead>
             <tr>
@@ -38,7 +35,7 @@ $results = $users_api->dbQueryUsers();
                 <td>
                     <?= $record['username'] ?>
                     <div style="float: right; text-align: right">
-                        <button class="btn btn-danger btn-xs" onclick="deleteUser(<?= $record['id'] ?>)" type="button">Delete</button>
+                        <a href="<?= SITE_ROOT ?>/users/delete.php?id=<?= $record['id'] ?>&user=<?= $record['username'] ?>" class="btn btn-danger btn-xs" type="button">Delete</a>
                     </div>
                 </td>
             </tr>
@@ -46,9 +43,6 @@ $results = $users_api->dbQueryUsers();
 
         </tbody>
     </table>
-    </form>
-    <!-- End modify form -->
-
 </div>
 
 <?php

@@ -61,6 +61,22 @@ class UserManager {
         }
         return $db->lastInsertId();
     }
+    // Delete user from database using id
+    function dbDeleteUser($id) {
+        $dbc = $this->dbConnect();
+        $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $query = "DELETE FROM users WHERE id=:id";
+        try {
+            $sql = $dbc->prepare($query);
+            $sql->bindParam(":id", $id);
+            $sql->execute();
+            return true;
+        } catch(Exception $ex) {
+            echo "what the heck<br />";
+            echo $ex->getMessage();
+            return false;
+        }
+    }
     // Check for duplicate user
     function dbCheckDuplicateUser($username) {
         $dbc = $this->dbConnect();
