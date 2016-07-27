@@ -35,7 +35,7 @@ $results = $users_api->dbQueryUsers();
                 <td>
                     <?= $record['username'] ?>
                     <div style="float: right; text-align: right">
-                        <a href="<?= SITE_ROOT ?>/users/delete.php?id=<?= $record['id'] ?>&user=<?= $record['username'] ?>" class="btn btn-danger btn-xs" type="button">Delete</a>
+                        <a href="delete.php?id=<?= $record['id'] ?>&user=<?= $record['username'] ?>" class="btn btn-danger btn-xs" type="button">Delete</a>
                     </div>
                 </td>
             </tr>

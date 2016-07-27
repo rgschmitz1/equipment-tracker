@@ -9,14 +9,14 @@
     <h2><?= $inventory_header_title ?></h2>
     <p><a href="new.php">Add New Product</a></p>
     <!-- Start modify form -->
-    <form class="form-inline" action="<?= SITE_ROOT ?>/inventory/modify.php" method="get" role="form">
+    <form class="form-inline" action="modify.php" method="get" role="form">
     <table class="table table-bordered table-striped table-hover">
         <thead>
             <tr>
                 <th>Serial</th>
                 <th>Description</th>
                 <th>Location</th>
-                <th>Modify</th>
+                <th>Modify / Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -41,6 +41,7 @@
             ?>
                 <td style="padding-top: 0px; padding-bottom: 0px">
                     <button class="btn btn-default" type="submit" name="item_id" value="<?= $record['id'] ?>">Edit</button>
+                    <a href="delete.php?serial=<?= $record['serial'] ?>&product=<?= $record['product'] ?>" class="btn btn-danger" type="button">Delete</a>
                 </td>
             </tr>
         <?php } ?>

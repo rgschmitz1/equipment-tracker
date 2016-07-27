@@ -61,6 +61,22 @@ class InventoryManager {
             echo $ex->getMessage();
         }
     }
+    // Delete product
+    function dbDeleteProduct($serial) {
+        $dbc = $this->dbConnect();
+        $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $query = "DELETE FROM products WHERE serial=:serial";
+        try {
+            $sql = $dbc->prepare($query);
+            $sql->bindParam(":serial", $serial);
+            $sql->execute();
+            return true;
+        } catch(Exception $ex) {
+            echo "what the heck<br />";
+            echo $ex->getMessage();
+            return false;
+        }
+    }
     // Check for duplicate product
     function dbCheckDuplicateProduct($serial) {
         $dbc = $this->dbConnect();

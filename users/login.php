@@ -58,7 +58,7 @@ if (empty($_SESSION['xes_userid'])) {
                 </div>
             </fieldset>
         </form>
-        <p><a href="<?= SITE_ROOT ?>/users/adminlogin.php">Admin Login Page</a></p>
+        <p><a href="adminlogin.php">Admin Login Page</a></p>
     </div>
 
 <?php

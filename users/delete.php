@@ -22,7 +22,7 @@ if (isset($_POST['submit'])) {
         ?>
             <div class="alert alert-dismissible alert-danger">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <p>Failed to delete user <b><?= $_POST['user'] ?></b> from database.</p>
+                <p>Failed to delete user id <b><?= $_POST['id'] ?></b> from database.</p>
             </div>
         <?php
         }
@@ -33,7 +33,7 @@ if (isset($_POST['submit'])) {
 <div class="container">
 
 <?php
-if (!isset($_GET['user']))
+if (!isset($_GET['user']) || !isset($_GET['id']))
     header('Location: index.php');
 ?>
 
