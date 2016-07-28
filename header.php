@@ -12,6 +12,8 @@ $users_api = new UserManager();
     <link rel="stylesheet" type="text/css" href="<?= SITE_ROOT ?>/css/bootstrap.min.css" />
     <!-- custom stylesheet -->
     <link rel="stylesheet" type="text/css" href="<?= SITE_ROOT ?>/css/custom.min.css" />
+    <!-- favorite icon -->
+    <link rel="shortcut icon" href="<?= SITE_ROOT ?>/favicon.ico" type="image/x-icon" />
 </head>
 <body>
 
