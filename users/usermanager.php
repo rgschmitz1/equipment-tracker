@@ -124,9 +124,8 @@ class UserManager {
         if (!isset($_SESSION))
             session_start();
         if (!isset($_SESSION['xes_userid']) && !isset($_SESSION['xes_adminid'])) {
-            $site_root = '/xes';
-            if (($_SERVER['PHP_SELF'] != "$site_root/users/login.php") && ($_SERVER['PHP_SELF'] != "$site_root/users/adminlogin.php")) {
-                header("Location: $site_root/users/login.php");
+            if (($_SERVER['PHP_SELF'] != "/users/login.php") && ($_SERVER['PHP_SELF'] != "/users/adminlogin.php")) {
+                header("Location: /users/login.php");
             }
         }
     }

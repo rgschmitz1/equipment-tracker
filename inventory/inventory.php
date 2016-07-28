@@ -7,6 +7,7 @@
     <?php } ?>
 
     <h2><?= $inventory_header_title ?></h2>
+    <!-- Search bar does not work -->
     <form role="search">
         <div class="form-group" style="float: right">
             <input class="form-control" placeholder="Search" type="text">

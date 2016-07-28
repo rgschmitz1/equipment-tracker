@@ -1,2 +1,2 @@
 <?php
-define('SITE_ROOT', 'http://' . $_SERVER['HTTP_HOST'] . '/xes');
+define('SITE_ROOT', 'http://' . $_SERVER['HTTP_HOST']);
