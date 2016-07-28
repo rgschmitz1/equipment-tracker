@@ -7,6 +7,11 @@
     <?php } ?>
 
     <h2><?= $inventory_header_title ?></h2>
+    <form role="search">
+        <div class="form-group" style="float: right">
+            <input class="form-control" placeholder="Search" type="text">
+        </div>
+    </form>
     <p><a href="new.php">Add New Product</a></p>
     <!-- Start modify form -->
     <form class="form-inline" action="modify.php" method="get" role="form">
@@ -22,7 +27,7 @@
         <tbody>
         <?php foreach ($results as $record) { ?>
             <tr>
-                <td><a href="http://webapps.xes-mad.com/support/perl/apps/prodTracking/mfg.pl?mode=display&serNum=<?= $record['serial'] ?>&product=<?= $record['product'] ?>"</a><?= $record['serial'] ?></td>
+                <td><a href="http://webapps.xes-mad.com/support/perl/apps/prodTracking/mfg.pl?mode=display&amp;serNum=<?= $record['serial'] ?>&amp;product=<?= $record['product'] ?>"><?= $record['serial'] ?></a></td>
                 <td><?= $record['description'] ?></td>
             <?php
             if ($users_api->authorizeAdmin()) {
@@ -30,18 +35,19 @@
             } else {
                 echo "<td style='padding-top: 0px; padding-bottom: 0px'>\n";
                 if ($record['username'] == 'Unclaimed') {
-                    echo '<button class="btn btn-default" ';
+                    echo "<button class='btn btn-default' ";
                 } elseif ($record['username'] == $_SESSION['xes_username']) {
-                    echo '<button class="btn btn-primary" ';
+                    echo "<button class='btn btn-primary' ";
                 } else {
-                    echo '<button class="btn btn-danger" ';
+                    echo "<button class='btn btn-danger' ";
                 }
-                echo "onclick='claimBoard' type='button'>" . $record['username'] . "</button>\n</td>\n";
+                // This doesn't work yet...
+                echo "id='claim' onclick='claimBoard()' type='button'>" . $record['username'] . "</button>\n</td>\n";
             }
             ?>
                 <td style="padding-top: 0px; padding-bottom: 0px">
                     <button class="btn btn-default" type="submit" name="item_id" value="<?= $record['id'] ?>">Edit</button>
-                    <a href="delete.php?serial=<?= $record['serial'] ?>&product=<?= $record['product'] ?>" class="btn btn-danger" type="button">Delete</a>
+                    <a href="delete.php?serial=<?= $record['serial'] ?>&amp;product=<?= $record['product'] ?>" class="btn btn-danger" type="button">Delete</a>
                 </td>
             </tr>
         <?php } ?>

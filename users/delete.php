@@ -39,7 +39,7 @@ if (!isset($_GET['user']) || !isset($_GET['id']))
 
     <p>Please confirm you would like to delete user <b><?= $_GET['user'] ?></b>.</p>
     <form class="form-horizontal" action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
-    <input type="hidden" type="text" name="id" value="<?= $_GET['id'] ?>"</input>
+    <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
     <button type="submit" name="submit" value="submit" class="btn btn-danger">Confirm</button>
     <a href="index.php" class="btn btn-primary">Cancel</a>
     </form>

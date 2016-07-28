@@ -28,7 +28,7 @@ if (!isset($_GET['serial']) || !isset($_GET['product']))
 
     <p>Please confirm you would like to delete product <b><?= $_GET['product'] ?></b>, with serial number <b><?= $_GET['serial'] ?></b>.</p>
     <form class="form-horizontal" action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
-    <input type="hidden" type="text" name="serial" value="<?= $_GET['serial'] ?>"</input>
+    <input type="hidden" name="serial" value="<?= $_GET['serial'] ?>">
     <button type="submit" name="submit" value="submit" class="btn btn-danger">Confirm</button>
     <a href="index.php" class="btn btn-primary">Cancel</a>
     </form>
