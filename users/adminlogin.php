@@ -29,20 +29,19 @@ if (!isset($_SESSION['xes_adminid']) && isset($_POST['submit'])) {
     }
 }
 
-echo '<div class="container">';
+echo "<div class='container'>\n";
 
 // Check if user is already logged in
 if (empty($_SESSION['xes_adminid'])) {
     if (!empty($error_msg)) {
-    ?>
-        <div class="alert alert-dismisable alert-danger">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <p><?= $error_msg ?></p>
-        </div>
-    <?php
+?>
+    <div class="alert alert-dismisable alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <p><?= $error_msg ?></p>
+    </div>
+<?php
     }
-    ?>
-
+?>
     <div class="well center-login">
         <legend>Admin Login</legend>
         <form method="post" action="<?= $_SERVER['PHP_SELF'] ?>">
@@ -61,11 +60,12 @@ if (empty($_SESSION['xes_adminid'])) {
             </fieldset>
         </form>
     </div>
-
 <?php
 } else {
-    echo '<p>You are logged in as <b>' . $_SESSION['xes_username'] . '</b>.</p>';
+?>
+    <p>You are logged in as <b><?= $_SESSION['xes_username'] ?></b>.</p>
+<?php
 }
+echo "</div>\n";
 
-echo '</div>';
 require_once('../footer.php');

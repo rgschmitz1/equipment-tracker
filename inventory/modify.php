@@ -4,10 +4,12 @@ require_once('inventorymanager.php');
 $inventory_api = new InventoryManager();
 
 if (!isset($_GET['item_id']) && !isset($_POST['item_id'])) {
-    header('Location: index.php');
+    header('Location: inded.php');
 } elseif (isset($_GET['item_id']) && !empty($_GET['item_id'])) {
+    $nav_after_mod = $_GET['navaftermod'];
     $itemid = $_GET['item_id'];
 } elseif (isset($_POST['item_id']) && !empty($_POST['item_id'])) {
+    $nav_after_mod = $_POST['navaftermod'];
     $itemid = $_POST['item_id'];
 }
 
@@ -23,6 +25,9 @@ if (count($results) == 0) {
 } elseif (count($results) == 3) {
     foreach ($updatelist as $key => $value) {
         $data["$key"] = $results["$value"];
+        if ($key == 'Serial') {
+            $previous_serial = $results["$value"];
+        }
     }
 }
 
@@ -45,11 +50,11 @@ if (isset($_POST['submit'])) {
         $description = $data['Description'];
         $serial = $data['Serial'];
 
-        if ($inventory_api->dbCheckDuplicateProduct($serial) == 0) {
+        if ($inventory_api->dbCheckDuplicateProduct($serial) == 0 || $serial == $previous_serial) {
             $result = $inventory_api->dbModifyProduct($product, $description, $serial);
             if ($result == 1) {
                 $inventory_api->dbClose();
-                header("Location: index.php?item");
+                header("Location: $nav_after_mod?item");
             } else {
                 $inventory_api->dbError();
             }
@@ -59,64 +64,60 @@ if (isset($_POST['submit'])) {
         }
     }
 }
-
-echo '<div class="container">';
+echo "<div class='container'>\n";
 
 // Check if errors exist in form
 if (!empty($error_msg)) {
-    ?>
+?>
     <div class="alert alert-dismissible alert-danger">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <p><?= $error_msg ?></p>
     </div>
-    <?php
+<?php
 }
 ?>
-
-<div class="well">
-    <legend>Modify Product</legend>
-    <form class="form-horizontal" action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
-        <fieldset>
-
-        <?php
-        // Display modify item form below
-        echo "<input type='hidden' name='item_id' value='$itemid'>";
-        foreach ($updatelist as $key => $value) {
-            // Highlight form input as in error if flagged as having an issue
-            if (isset($error["$key"]) && ($error["$key"])) {
-                echo "<div class='form-group has-error has-feedback'>\n";
-            } else {
-                echo "<div class='form-group'>\n";
-            }
-            echo "<label for='$key' class='col-sm-2 control-label'>$key</label>\n";
-            if ($key == 'Description') {
-                echo "<div class='col-sm-10'>\n";
-            } else {
-                echo "<div class='col-sm-3'>\n";
-            }
-            if ($key == 'Serial') {
-                echo "<input type='number' min='10000000' max='99999999' ";
-            } else {
-                echo "<input type='text' ";
-            }
-            echo "class='form-control' name='$key' id='$key' value='" . $data["$key"] . "' placeholder='$key' required>\n";
-            // If error is present with input, display error icon in input box
-            if (isset($error["$key"]) && ($error["$key"])) {
-                echo "<span class='glyphicon glyphicon-remove form-control-feedback' aria-hidden='true'></span>\n";
-            }
-            echo "</div>\n</div>\n";
-        }
-        ?>
-
-            <div class="form-group">
-                <div class="col-sm-1 col-sm-offset-2">
-                    <button type="submit" name="submit" value="submit" class="btn btn-primary">Submit</button>
+    <div class="well">
+        <legend>Modify Product</legend>
+        <form class="form-horizontal" action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
+            <fieldset>
+<?php
+// Display modify item form below
+echo "<input type='hidden' name='item_id' value='$itemid'>\n";
+foreach ($updatelist as $key => $value) {
+    // Highlight form input as in error if flagged as having an issue
+    if (isset($error["$key"]) && ($error["$key"])) {
+        echo "<div class='form-group has-error has-feedback'>\n";
+    } else {
+        echo "<div class='form-group'>\n";
+    }
+    echo "<label for='$key' class='col-sm-2 control-label'>$key</label>\n";
+    if ($key == 'Description') {
+        echo "<div class='col-sm-10'>\n";
+    } else {
+        echo "<div class='col-sm-3'>\n";
+    }
+    if ($key == 'Serial') {
+        echo "<input type='number' min='10000000' max='99999999' ";
+    } else {
+        echo "<input type='text' ";
+    }
+    echo "class='form-control' name='$key' id='$key' value='" . $data["$key"] . "' placeholder='$key' required>\n";
+    // If error is present with input, display error icon in input box
+    if (isset($error["$key"]) && ($error["$key"])) {
+        echo "<span class='glyphicon glyphicon-remove form-control-feedback' aria-hidden='true'></span>\n";
+    }
+    echo "</div>\n</div>\n";
+}
+?>
+                <input type="hidden" name="navaftermod" value="<?= $nav_after_mod ?>">
+                <div class="form-group">
+                    <div class="col-sm-1 col-sm-offset-2">
+                        <button type="submit" name="submit" value="submit" class="btn btn-primary">Submit</button>
+                    </div>
                 </div>
-            </div>
-        </fieldset>
-    </form>
+            </fieldset>
+        </form>
+    </div>
 </div>
-</div>
-
 <?php
 include('../footer.php');

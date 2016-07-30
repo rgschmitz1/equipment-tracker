@@ -1,21 +1,25 @@
-<div class="container">
-    <?php if (isset($_GET['item'])) { ?>
+<?php
+require_once('../header.php');
+echo "<div class='container'>\n";
+if (isset($_GET['item'])) {
+?>
     <div class="alert alert-dismissible alert-success">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <p>Successfully added or updated inventory.</p>
     </div>
-    <?php } ?>
-
+<?php
+}
+?>
     <h2><?= $inventory_header_title ?></h2>
+
     <!-- Search bar does not work -->
     <form role="search">
         <div class="form-group" style="float: right">
             <input class="form-control" placeholder="Search" type="text">
         </div>
     </form>
+
     <p><a href="new.php">Add New Product</a></p>
-    <!-- Start modify form -->
-    <form class="form-inline" action="modify.php" method="get" role="form">
     <table class="table table-bordered table-striped table-hover">
         <thead>
             <tr>
@@ -26,49 +30,74 @@
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($results as $record) { ?>
+<?php
+foreach ($results as $record) {
+?>
             <tr>
                 <td><a href="http://webapps.xes-mad.com/support/perl/apps/prodTracking/mfg.pl?mode=display&amp;serNum=<?= $record['serial'] ?>&amp;product=<?= $record['product'] ?>"><?= $record['serial'] ?></a></td>
                 <td><?= $record['description'] ?></td>
-            <?php
-            if ($users_api->authorizeAdmin()) {
-                echo "<td>" . $record['username'] . "</td>\n";
-            } else {
-                echo "<td style='padding-top: 0px; padding-bottom: 0px'>\n";
-                if ($record['username'] == 'Unclaimed') {
-                    echo "<button class='btn btn-default' ";
-                } elseif ($record['username'] == $_SESSION['xes_username']) {
-                    echo "<button class='btn btn-primary' ";
-                } else {
-                    echo "<button class='btn btn-danger' ";
-                }
-                // This doesn't work yet...
-                echo "id='claim' onclick='claimBoard()' type='button'>" . $record['username'] . "</button>\n</td>\n";
-            }
-            ?>
+<?php
+    if ($users_api->authorizeAdmin()) {
+?>
+                <td>
+                    <?= $record['username'] ?>
+
+<?php
+    } else {
+?>
+                <td style='padding-top: 0px; padding-bottom: 0px'>
+                    <form action="claim.php" method="post" role="form">
+<?php
+        if ($record['username'] == 'Unclaimed') {
+            echo "<input type='hidden' name='user' value='" . $_SESSION['xes_userid'] . "'>\n";
+            echo "<button class='btn btn-default'";
+        } elseif ($record['username'] == $_SESSION['xes_username']) {
+            echo "<input type='hidden' name='user' value='1'>\n";
+            echo "<button class='btn btn-primary'";
+        } else {
+            echo "<button class='btn btn-danger'";
+        }
+        // This doesn't work yet...
+        echo " type='submit' name='claim' value='" . $record['id'] . "' type='button'>" . $record['username'] . "</button>\n";
+        echo "</form>\n";
+    }
+?>
+                </td>
                 <td style="padding-top: 0px; padding-bottom: 0px">
-                    <button class="btn btn-default" type="submit" name="item_id" value="<?= $record['id'] ?>">Edit</button>
-                    <a href="delete.php?serial=<?= $record['serial'] ?>&amp;product=<?= $record['product'] ?>" class="btn btn-danger" type="button">Delete</a>
+                    <!-- Edit form -->
+                    <form action="modify.php" method="get" role="form">
+                        <input type="hidden" name="navaftermod" value="<?= $goto_after_mod ?>">
+                        <button style="float: left; margin-right: 6px" class="btn btn-default" type="submit" name="item_id" value="<?= $record['id'] ?>">Edit</button>
+                    </form>
+                    <!-- Delete Modal -->
+                    <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#deleteModal<?= $record['id'] ?>" data-backdrop="static">Delete</button>
+                    <div id="deleteModal<?= $record['id'] ?>" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Delete Product</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Please confirm you would like to delete <b><?= $record['product'] ?></b>, with serial number <b><?= $record['serial'] ?></b>.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <form action="delete.php" method="post" role="form">
+                                        <input type="hidden" name="navafterdel" value="<?= $goto_after_mod ?>">
+                                        <button type="submit" name="delete" value="<?= $record['serial'] ?>" class="btn btn-danger">Confirm</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
-        <?php } ?>
-
+<?php
+}
+?>
         </tbody>
     </table>
-    </form>
-    <!-- End modify form -->
-
 </div>
-
-<!-- This doesn't currently work
-<script type="text/javascript">
-    $(document).ready(function() {
-        //js -> call InventoryService.php
-        $("#btnUpdate").click(function() {
-            $.ajax("InventoryService.php", {"data":{"id":$("#idToUpdate").val(),
-                                                    "user_id":$("#user_id").val(),
-                                                    "method":"PUT"});
-        });
-    })
-</script>
--->
+<?php
+require_once('../footer.php');

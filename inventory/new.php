@@ -41,65 +41,61 @@ if (isset($_POST['submit'])) {
         }
     }
 }
-
-echo '<div class="container">';
+echo "<div class='container'>\n";
 
 // Check if errors exist in form
 if (!empty($error_msg)) {
-    ?>
+?>
     <div class="alert alert-dismissible alert-danger">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <p><?= $error_msg ?></p>
     </div>
-    <?php
+<?php
 }
 ?>
+    <div class="well">
+        <legend>Add Product</legend>
+        <form class="form-horizontal" action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
+            <fieldset>
+<?php
 
-<div class="well">
-    <legend>Add Product</legend>
-    <form class="form-horizontal" action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
-        <fieldset>
-
-        <?php
-        // Display new item form below
-        foreach ($list as $key => $value) {
-            // Highlight form input as in error if flagged as having an issue
-            if (isset($error["$key"]) && ($error["$key"])) {
-                echo "<div class='form-group has-error has-feedback'>\n";
-            } else {
-                echo "<div class='form-group'>\n";
-            }
-            echo "<label for='$key' class='col-sm-2 control-label'>$value</label>\n";
-            if ($key == 'Description') {
-                echo "<div class='col-sm-10'>\n";
-            } else {
-                echo "<div class='col-sm-3'>\n";
-            }
-            if ($key == 'Serial') {
-                echo "<input type='number' min='10000000' max='99999999' ";
-            } else {
-                echo "<input type='text' ";
-            }
-            echo "class='form-control' name='$key' id='$key' placeholder='$value' ";
-            if (!empty($data["$key"])) echo "value='" . $data["$key"] . "' ";
-            echo "required>\n";
-            // If error is present with input, display error icon in input box
-            if (isset($error["$key"]) && ($error["$key"])) {
-                echo "<span class='glyphicon glyphicon-remove form-control-feedback' aria-hidden='true'></span>\n";
-            }
-            echo "</div>\n</div>\n";
-        }
-        ?>
-
-            <div class="form-group">
-                <div class="col-sm-1 col-sm-offset-2">
-                    <button type="submit" name="submit" value="submit" class="btn btn-primary">Submit</button>
+// Display new item form below
+foreach ($list as $key => $value) {
+    // Highlight form input as in error if flagged as having an issue
+    if (isset($error["$key"]) && ($error["$key"])) {
+        echo "<div class='form-group has-error has-feedback'>\n";
+    } else {
+        echo "<div class='form-group'>\n";
+    }
+    echo "<label for='$key' class='col-sm-2 control-label'>$value</label>\n";
+    if ($key == 'Description') {
+        echo "<div class='col-sm-10'>\n";
+    } else {
+        echo "<div class='col-sm-3'>\n";
+    }
+    if ($key == 'Serial') {
+        echo "<input type='number' min='10000000' max='99999999'";
+    } else {
+        echo "<input type='text'";
+    }
+    echo " class='form-control' name='$key' id='$key' placeholder='$value'";
+    if (!empty($data["$key"])) echo "value='" . $data["$key"] . "' ";
+    echo " required>\n";
+    // If error is present with input, display error icon in input box
+    if (isset($error["$key"]) && ($error["$key"])) {
+        echo "<span class='glyphicon glyphicon-remove form-control-feedback' aria-hidden='true'></span>\n";
+    }
+    echo "</div>\n</div>\n";
+}
+?>
+                <div class="form-group">
+                    <div class="col-sm-1 col-sm-offset-2">
+                        <button type="submit" name="submit" value="submit" class="btn btn-primary">Submit</button>
+                    </div>
                 </div>
-            </div>
-        </fieldset>
-    </form>
+            </fieldset>
+        </form>
+    </div>
 </div>
-</div>
-
 <?php
 include('../footer.php');

@@ -10,40 +10,24 @@ if (!$users_api->authorizeAdmin()) {
 }
 
 // If user has submitted form, check user input
-if (isset($_POST['submit'])) {
+if (isset($_POST['delete'])) {
     require_once('../inventory/inventorymanager.php');
     $inventory_api = new InventoryManager();
     // Unclaim all products for user to delete
-    if ($inventory_api->dbUnclaimAll($_POST['id'])) {
+    if ($inventory_api->dbUnclaimAll($_POST['delete'])) {
         // Delete user if all products successfully unclaimed
-        if ($users_api->dbDeleteUser($_POST['id'])) {
+        if ($users_api->dbDeleteUser($_POST['delete'])) {
             header('Location: index.php');
         } else {
         ?>
-            <div class="alert alert-dismissible alert-danger">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <p>Failed to delete user id <b><?= $_POST['id'] ?></b> from database.</p>
+            <div class="container">
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <p>Failed to delete user id <b><?= $_POST['delete'] ?></b> from database.</p>
+                </div>
             </div>
         <?php
         }
     }
 }
-?>
-
-<div class="container">
-
-<?php
-if (!isset($_GET['user']) || !isset($_GET['id']))
-    header('Location: index.php');
-?>
-
-    <p>Please confirm you would like to delete user <b><?= $_GET['user'] ?></b>.</p>
-    <form class="form-horizontal" action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
-    <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
-    <button type="submit" name="submit" value="submit" class="btn btn-danger">Confirm</button>
-    <a href="index.php" class="btn btn-primary">Cancel</a>
-    </form>
-</div>
-
-<?php
 include('../footer.php');
