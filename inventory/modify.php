@@ -50,8 +50,10 @@ if (isset($_POST['submit'])) {
         $description = $data['Description'];
         $serial = $data['Serial'];
 
-        if ($inventory_api->dbCheckDuplicateProduct($serial) == 0 || $serial == $previous_serial) {
-            $result = $inventory_api->dbModifyProduct($product, $description, $serial);
+        if ($product == $results['product'] && $description == $results['description'] && $serial == $results['serial']) {
+            $error_msg = 'One of the below fields must be edited to proceed';
+        } elseif ($inventory_api->dbCheckDuplicateProduct($serial) == 0 || $serial == $previous_serial) {
+            $result = $inventory_api->dbModifyProduct($product, $description, $serial, $itemid);
             if ($result == 1) {
                 $inventory_api->dbClose();
                 header("Location: $nav_after_mod?item");
@@ -82,7 +84,6 @@ if (!empty($error_msg)) {
             <fieldset>
 <?php
 // Display modify item form below
-echo "<input type='hidden' name='item_id' value='$itemid'>\n";
 foreach ($updatelist as $key => $value) {
     // Highlight form input as in error if flagged as having an issue
     if (isset($error["$key"]) && ($error["$key"])) {
@@ -109,6 +110,7 @@ foreach ($updatelist as $key => $value) {
     echo "</div>\n</div>\n";
 }
 ?>
+                <input type="hidden" name="item_id" value="<?= $itemid ?>">
                 <input type="hidden" name="navaftermod" value="<?= $nav_after_mod ?>">
                 <div class="form-group">
                     <div class="col-sm-1 col-sm-offset-2">

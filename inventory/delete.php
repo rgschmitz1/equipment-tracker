@@ -12,7 +12,7 @@ if (isset($_POST['delete'])) {
 <div class="container">
     <div class="alert alert-dismissible alert-danger">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <p>Failed to delete product with serial number <b><?= $_POST['delete'] ?></b> from database.</p>
+        <p>Failed to delete product with serial number <b><?= $_POST['serial'] ?></b> from database.</p>
     </div>
 </div>
 <?php

@@ -47,18 +47,20 @@ foreach ($results as $record) {
 ?>
                 <td style='padding-top: 0px; padding-bottom: 0px'>
                     <form action="claim.php" method="post" role="form">
+                        <input type="hidden" name="navafterclaim" value="<?= $goto_after_mod ?>">
 <?php
         if ($record['username'] == 'Unclaimed') {
             echo "<input type='hidden' name='user' value='" . $_SESSION['xes_userid'] . "'>\n";
             echo "<button class='btn btn-default'";
         } elseif ($record['username'] == $_SESSION['xes_username']) {
             echo "<input type='hidden' name='user' value='1'>\n";
-            echo "<button class='btn btn-primary'";
+            echo "<button class='btn btn-success'";
         } else {
-            echo "<button class='btn btn-danger'";
+            echo "<input type='hidden' name='user' value='" . $_SESSION['xes_userid'] . "'>\n";
+            echo "<button class='btn btn-warning'";
         }
         // This doesn't work yet...
-        echo " type='submit' name='claim' value='" . $record['id'] . "' type='button'>" . $record['username'] . "</button>\n";
+        echo " type='submit' name='claim' value='" . $record['id'] . "'>" . $record['username'] . "</button>\n";
         echo "</form>\n";
     }
 ?>
@@ -85,7 +87,8 @@ foreach ($results as $record) {
                                 <div class="modal-footer">
                                     <form action="delete.php" method="post" role="form">
                                         <input type="hidden" name="navafterdel" value="<?= $goto_after_mod ?>">
-                                        <button type="submit" name="delete" value="<?= $record['serial'] ?>" class="btn btn-danger">Confirm</button>
+                                        <input type="hidden" name="serial" value="<?= $record['serial'] ?>">
+                                        <button type="submit" name="delete" value="<?= $record['id'] ?>" class="btn btn-danger">Confirm</button>
                                     </form>
                                 </div>
                             </div>

@@ -45,15 +45,16 @@ class InventoryManager {
         }
     }
     // Update product
-    function dbModifyProduct($product, $description, $serial) {
+    function dbModifyProduct($product, $description, $serial, $id) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "UPDATE products SET product=:product, description=:description, serial=:serial";
+        $query = "UPDATE products SET product=:product, description=:description, serial=:serial WHERE id=:id";
         try {
             $sql = $dbc->prepare($query);
             $sql->bindParam(":product", $product);
             $sql->bindParam(":description", $description);
             $sql->bindParam(":serial", $serial);
+            $sql->bindParam(":id", $id);
             $sql->execute();
             return $sql->rowCount();
         } catch(Exception $ex) {
@@ -79,13 +80,13 @@ class InventoryManager {
         }
     }
     // Delete product
-    function dbDeleteProduct($serial) {
+    function dbDeleteProduct($id) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "DELETE FROM products WHERE serial=:serial";
+        $query = "DELETE FROM products WHERE id=:id";
         try {
             $sql = $dbc->prepare($query);
-            $sql->bindParam(":serial", $serial);
+            $sql->bindParam(":id", $id);
             $sql->execute();
             return true;
         } catch(Exception $ex) {

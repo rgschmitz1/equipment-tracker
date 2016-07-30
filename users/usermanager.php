@@ -96,7 +96,7 @@ class UserManager {
     function dbQueryUsers() {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "SELECT * FROM users WHERE username NOT LIKE 'Unclaimed'";
+        $query = "SELECT * FROM users WHERE username NOT LIKE 'Unclaimed' ORDER BY username";
         try {
             $sql = $dbc->prepare($query);
             $sql->execute();

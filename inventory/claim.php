@@ -6,7 +6,7 @@ if (isset($_POST['claim']) && isset($_POST['user'])) {
     $inventory_api = new InventoryManager();
     // Delete user if all products successfully unclaimed
     if ($inventory_api->dbClaimProduct($_POST['claim'], $_POST['user'])) {
-        header('Location: index.php');
+        header('Location: ' . $_POST['navafterclaim']);
     } else {
 ?>
 <div class="container">

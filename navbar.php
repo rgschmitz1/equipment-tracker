@@ -22,7 +22,7 @@ if (isset($_SESSION['xes_userid']) || isset($_SESSION['xes_adminid'])) {
 <?php
     if (!$users_api->authorizeAdmin()) {
 ?>
-                <li><a href="<?= SITE_ROOT ?>/inventory/myinventory.php">My Inventory</a></li>
+                <li><a href="<?= SITE_ROOT ?>/inventory/myindex.php">My Inventory</a></li>
 <?php
     }
 ?>
