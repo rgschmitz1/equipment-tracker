@@ -39,7 +39,7 @@ foreach ($results as $record) {
 
                     <button style="float: right" class="btn btn-danger btn-xs" type="button" data-toggle="modal" data-target="#deleteModal<?= $record['id'] ?>" data-backdrop="static">Delete</button>
                     <!-- Delete Modal -->
-                    <div id="deleteModal<?= $record['id'] ?>" class="modal fade" role="dialog">
+                    <div id="deleteModal<?= $record['id'] ?>" class="modal" role="dialog">
                         <div class="modal-dialog">
                             <!-- Modal content-->
                             <div class="modal-content">

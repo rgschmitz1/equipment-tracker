@@ -89,7 +89,7 @@ foreach ($results as $record) {
                     </form>
                     <!-- Delete Modal -->
                     <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#deleteModal<?= $record['id'] ?>" data-backdrop="static">Delete</button>
-                    <div id="deleteModal<?= $record['id'] ?>" class="modal fade" role="dialog">
+                    <div id="deleteModal<?= $record['id'] ?>" class="modal" role="dialog">
                         <div class="modal-dialog">
                             <!-- Modal content-->
                             <div class="modal-content">
