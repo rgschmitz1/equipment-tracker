@@ -97,17 +97,6 @@ class UserManager extends DbManager {
         return $results;
     }
 
-    // Check if user is logged in, otherwise redirect to login page
-    function authenticateUser() {
-        if (!isset($_SESSION))
-            session_start();
-        if (!isset($_SESSION['xes_userid']) && !isset($_SESSION['xes_adminid'])) {
-            if (($_SERVER['PHP_SELF'] != "/users/login.php") && ($_SERVER['PHP_SELF'] != "/users/adminlogin.php")) {
-                header("Location: /users/login.php");
-            }
-        }
-    }
-
     // Check if administrative user is logged in
     function authorizeAdmin() {
         if (!isset($_SESSION))

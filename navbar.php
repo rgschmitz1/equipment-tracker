@@ -1,5 +1,7 @@
 <?php
-require_once('header.php')
+require_once('dbmanager.php');
+require_once('users/usermanager.php');
+$users_api = new UserManager();
 ?>
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container">
