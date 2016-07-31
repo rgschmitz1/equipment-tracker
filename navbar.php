@@ -10,7 +10,7 @@ require_once('header.php')
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" style="text-shadow:2px 2px 1px #d0d0d0; font-family:times new roman" href="<?= SITE_ROOT ?>">
+            <a class="navbar-brand" href="<?= SITE_ROOT ?>">
                 <span style="color:#000099; font-size:36px">X</span><span style="color:#000000; font-size:30px">-ES</span>
             </a>
         </div>

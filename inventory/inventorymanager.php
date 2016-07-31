@@ -1,16 +1,6 @@
 <?php
-class InventoryManager {
-    // Define database connection constants
-    const DB_USER = 'root';
-    const DB_PASSWORD = '';
-
-    // Set database connect variable
-    private function dbConnect() {
-        $dbc = new PDO('mysql:host=localhost;dbname=mfgtest', self::DB_USER, self::DB_PASSWORD)
-            or exit('Error connecting to MySQL server.');
-        return $dbc;
-    }
-
+require_once('../dbmanager.php');
+class InventoryManager extends DbManager {
     // Unclaim all products for specific user
     function dbClaimProduct($id, $user) {
         $dbc = $this->dbConnect();
@@ -154,16 +144,5 @@ class InventoryManager {
             echo $ex->getMessage();
         }
         return $results;
-    }
-
-    // Close database connection
-    function dbClose() {
-        $dbc = $this->dbConnect();
-        $dbc = null;
-    }
-
-    // Return database error
-    function dbError() {
-        exit("Database query error.");
     }
 }

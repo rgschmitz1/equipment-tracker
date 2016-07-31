@@ -61,7 +61,7 @@ foreach ($results as $record) {
 <?php
     } else {
 ?>
-                <td style='padding-top: 0px; padding-bottom: 0px'>
+                <td style="padding-top: 0px; padding-bottom: 0px">
                     <form action="claim.php" method="post" role="form">
                         <input type="hidden" name="navafterclaim" value="<?= $goto_after_mod ?>">
 <?php

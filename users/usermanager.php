@@ -1,16 +1,6 @@
 <?php
-class UserManager {
-    // Define database connection constants
-    const DB_USER = 'root';
-    const DB_PASSWORD = '';
-
-    // Set database connect variable
-    private function dbConnect() {
-        $dbc = new PDO('mysql:host=localhost;dbname=mfgtest', self::DB_USER, self::DB_PASSWORD)
-            or exit('Error connecting to MySQL server.');
-        return $dbc;
-    }
-
+require_once('../dbmanager.php');
+class UserManager extends DbManager {
     // Login user
     function dbUserLogin($username) {
         if ($username == 'Unclaimed')
@@ -106,17 +96,6 @@ class UserManager {
             echo $ex->getMessage();
         }
         return $results;
-    }
-
-    // Close database connection
-    function dbClose() {
-        $dbc = $this->dbConnect();
-        $dbc = null;
-    }
-
-    // Return database error
-    function dbError() {
-        exit("Database query error.");
     }
 
     // Check if user is logged in, otherwise redirect to login page

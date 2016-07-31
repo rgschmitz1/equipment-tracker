@@ -1,2 +1,1 @@
-/* custom stylesheet */
-html{position:relative;min-height:100%;}body{padding-top:60px;margin-bottom:60px;}.footer{position:absolute;bottom:0;width:100%;height:50px;}.dropdown:hover .dropdown-menu{display:block;}.center-login{width:280px;margin:auto;text-align:center;}
+html{position:relative;min-height:100%}body{padding-top:60px;margin-bottom:60px}.footer{position:absolute;bottom:0;width:100%;height:50px}.dropdown:hover .dropdown-menu{display:block}.center-login{width:280px;margin:auto;text-align:center}.navbar-brand{text-shadow:2px 2px 1px #d0d0d0;font-family:times new roman}
