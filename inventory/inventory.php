@@ -1,6 +1,14 @@
 <?php
 require_once('../header.php');
 echo "<div class='container'>\n";
+if (isset($error_msg) && !empty($error_msg)) {
+?>
+    <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <p><?= $error_msg ?></p>
+    </div>
+<?php
+}
 if (isset($_GET['item'])) {
 ?>
     <div class="alert alert-dismissible alert-success">
@@ -11,15 +19,23 @@ if (isset($_GET['item'])) {
 }
 ?>
     <h2><?= $inventory_header_title ?></h2>
-
-    <!-- Search bar does not work -->
-    <form role="search">
-        <div class="form-group" style="float: right">
-            <input class="form-control" placeholder="Search" type="text">
+    <!-- Search bar -->
+    <div class="row">
+        <div class="col-xs-3">
+            <a href="new.php">Add New Product</a>
         </div>
-    </form>
-
-    <p><a href="new.php">Add New Product</a></p>
+        <form action="<?= $goto_after_mod ?>" method="get" role="search">
+            <div class="col-xs-offset-6 col-xs-3">
+                <div class="input-group">
+                    <input type="text" name="query" class="form-control" placeholder="Search"<?php if (isset($_GET['query'])) echo ' value="' . $_GET['query'] . '"'; ?>>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br />
     <table class="table table-bordered table-striped table-hover">
         <thead>
             <tr>

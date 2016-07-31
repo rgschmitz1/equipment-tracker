@@ -126,30 +126,27 @@ class InventoryManager {
         }
         return $results;
     }
-    // Query products by user_id
-    function dbQueryUserProducts() {
+    // Query products
+    function dbQueryProducts($keyword, $userid) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        if (!isset($_SESSION))
-            session_start();
-        $query = "SELECT a.*, b.username FROM products a, users b WHERE a.user_id=b.id AND user_id=" . $_SESSION['xes_userid'] . " ORDER BY serial";
+        $query = "SELECT a.*, b.username FROM products a, users b WHERE a.user_id=b.id";
+        if (!empty($keyword))
+            $query = "$query AND (serial LIKE :keyword1 OR product LIKE :keyword2 OR description LIKE :keyword3)";
+        if (!empty($userid))
+            $query = "$query AND user_id=:userid";
+        $query = "$query ORDER BY serial";
         try {
             $sql = $dbc->prepare($query);
-            $sql->execute();
-            $results = $sql->fetchAll(PDO::FETCH_ASSOC);
-        } catch(Exception $ex) {
-            echo "what the heck<br />";
-            echo $ex->getMessage();
-        }
-        return $results;
-    }
-    // Query all products
-    function dbQueryProducts() {
-        $dbc = $this->dbConnect();
-        $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "SELECT a.*, b.username FROM products a, users b WHERE a.user_id=b.id ORDER BY serial";
-        try {
-            $sql = $dbc->prepare($query);
+            if (!empty($keyword)) {
+                $keyword = '%' . $keyword . '%';
+                $sql->bindParam(':keyword1', $keyword);
+                $sql->bindParam(':keyword2', $keyword);
+                $sql->bindParam(':keyword3', $keyword);
+            }
+            if (!empty($userid)) {
+                $sql->bindParam(':userid', $userid);
+            }
             $sql->execute();
             $results = $sql->fetchAll(PDO::FETCH_ASSOC);
         } catch(Exception $ex) {
