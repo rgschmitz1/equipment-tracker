@@ -1,12 +1,8 @@
 <?php
 abstract class DbManager {
-    // Define database connection constants
-    const DB_USER = 'root';
-    const DB_PASSWORD = '';
-
     // Set database connect variable
     protected function dbConnect() {
-        $dbc = new PDO('mysql:host=localhost;dbname=mfgtest', self::DB_USER, self::DB_PASSWORD)
+        $dbc = new PDO('mysql:host=localhost;dbname=mfgtest', 'root', '')
             or exit('Error connecting to MySQL server.');
         return $dbc;
     }
