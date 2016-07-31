@@ -30,4 +30,4 @@ if (isset($_POST['delete'])) {
         }
     }
 }
-include('../footer.php');
+require_once('../footer.php');

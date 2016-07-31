@@ -1,5 +1,4 @@
 <?php
-require_once('../dbmanager.php');
 class UserManager extends DbManager {
     // Login user
     function dbUserLogin($username) {

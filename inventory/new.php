@@ -98,4 +98,4 @@ foreach ($list as $key => $value) {
     </div>
 </div>
 <?php
-include('../footer.php');
+require_once('../footer.php');

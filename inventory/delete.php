@@ -20,4 +20,4 @@ if (isset($_POST['delete'])) {
 } else {
     header('Location: index.php');
 }
-include('../footer.php');
+require_once('../footer.php');

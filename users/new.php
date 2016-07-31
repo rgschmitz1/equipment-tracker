@@ -96,4 +96,4 @@ if (isset($error['username']) && ($error['username'])) {
     </div>
 </div>
 <?php
-include('../footer.php');
+require_once('../footer.php');
