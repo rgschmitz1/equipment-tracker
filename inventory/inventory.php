@@ -50,7 +50,13 @@ if (isset($_GET['item'])) {
 foreach ($results as $record) {
 ?>
             <tr>
-                <td><a href="http://webapps.xes-mad.com/support/perl/apps/prodTracking/mfg.pl?mode=display&amp;serNum=<?= $record['serial'] ?>&amp;product=<?= $record['product'] ?>"><?php echo str_pad($record['serial'], 8, '0', STR_PAD_LEFT); ?></a></td>
+                <td>
+                    <a href="http://webapps.xes-mad.com/support/perl/apps/prodTracking/mfg.pl?mode=display&amp;serNum=<?= $record['serial'] ?>&amp;product=<?= $record['product'] ?>">
+<?php
+    echo str_pad($record['serial'], 8, '0', STR_PAD_LEFT);
+?>
+                    </a>
+                </td>
                 <td><?php echo substr($record['description'], 0, 90); ?></td>
 <?php
     if ($users_api->authorizeAdmin()) {
