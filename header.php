@@ -1,14 +1,9 @@
 <?php
 require_once('appvars.php');
-// Check if user is logged in, otherwise redirect to login page
-if (!isset($_SESSION))
-    session_start();
-if (!isset($_SESSION['xes_userid']) && !isset($_SESSION['xes_adminid'])) {
-    if ((SITE_ROOT . $_SERVER['PHP_SELF'] != SITE_ROOT . '/users/login.php') &&
-        (SITE_ROOT . $_SERVER['PHP_SELF'] != SITE_ROOT . '/users/adminlogin.php')) {
-        header('Location: ' . SITE_ROOT . '/users/login.php');
-    }
-}
+require_once('dbmanager.php');
+require_once('users/usermanager.php');
+$users_api = new UserManager();
+$users_api->authenticateUser();
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -1,5 +1,5 @@
 <?php
-require_once('../header.php');
+require_once('../users/authenticateuser.php');
 // If user has submitted form, check user input
 if (isset($_POST['delete'])) {
     require_once('inventorymanager.php');
@@ -8,16 +8,8 @@ if (isset($_POST['delete'])) {
     if ($inventory_api->dbDeleteProduct($_POST['delete'])) {
         header('Location: ' . $_POST['navafterdel']);
     } else {
-?>
-<div class="container">
-    <div class="alert alert-dismissible alert-danger">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <p>Failed to delete product with serial number <b><?= $_POST['serial'] ?></b> from database.</p>
-    </div>
-</div>
-<?php
+        echo 'Failed to delete product with serial number <b>' . $_POST['serial'] . '</b> from database.';
     }
 } else {
     header('Location: index.php');
 }
-require_once('../footer.php');
