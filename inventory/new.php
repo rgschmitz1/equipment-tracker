@@ -3,15 +3,15 @@ require_once('../header.php');
 require_once('inventorymanager.php');
 $inventory_api = new InventoryManager();
 
-$list = array('Product' => 'Product',
-              'Description' => 'Description',
-              'Serial' => 'Serial');
+$list = array('Product',
+              'Description',
+              'Serial');
 
 // If user has submitted form, check user input
 if (isset($_POST['submit'])) {
     $error_msg = '';
     // Check each input is set
-    while (list($key,) = each($list)) {
+    foreach ($list as $key) {
         $data["$key"] = '';
         $error["$key"] = false;
         if (!isset($_POST["$key"]) || empty($_POST["$key"])) {
@@ -60,14 +60,14 @@ if (!empty($error_msg)) {
 <?php
 
 // Display new item form below
-foreach ($list as $key => $value) {
+foreach ($list as $key) {
     // Highlight form input as in error if flagged as having an issue
     if (isset($error["$key"]) && ($error["$key"])) {
         echo "<div class='form-group has-error has-feedback'>\n";
     } else {
         echo "<div class='form-group'>\n";
     }
-    echo "<label for='$key' class='col-sm-2 control-label'>$value</label>\n";
+    echo "<label for='$key' class='col-sm-2 control-label'>$key</label>\n";
     if ($key == 'Description') {
         echo "<div class='col-sm-10'>\n";
     } else {
@@ -81,7 +81,7 @@ foreach ($list as $key => $value) {
     } elseif ($key == 'Description') {
         echo " maxlength='120'";
     }
-    echo " class='form-control' name='$key' id='$key' placeholder='$value'";
+    echo " class='form-control' name='$key' id='$key' placeholder='$key'";
     if (!empty($data["$key"])) {
         echo " value='" . $data["$key"] . "'";
     }
