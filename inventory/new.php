@@ -76,6 +76,10 @@ foreach ($list as $key => $value) {
     echo "<input type='text'";
     if ($key == 'Serial') {
         echo " maxlength='8' pattern='\d{8}'";
+    } elseif ($key == 'Product') {
+        echo " maxlength='30'";
+    } elseif ($key == 'Description') {
+        echo " maxlength='120'";
     }
     echo " class='form-control' name='$key' id='$key' placeholder='$value'";
     if (!empty($data["$key"])) {

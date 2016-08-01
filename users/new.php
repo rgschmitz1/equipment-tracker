@@ -74,7 +74,7 @@ if (isset($error['username']) && ($error['username'])) {
                     <label for="username" class="col-sm-2 control-label">Username</label>
                     <div class="col-sm-3">
 <?php
-echo "<input type='text' class='form-control' name='username' id='username' placeholder='Username'";
+echo "<input type='text' maxlength='30' class='form-control' name='username' id='username' placeholder='Username'";
 if (!empty($data['username'])) {
     echo " value='" . $data['username'] . "'";
 }

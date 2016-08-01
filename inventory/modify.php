@@ -100,8 +100,10 @@ foreach ($updatelist as $key => $value) {
     echo "<input type='text'";
     if ($key == 'Serial') {
         echo " maxlength='8' pattern='\d{8}' value='" . str_pad($data['Serial'], 8, '0', STR_PAD_LEFT) . "'";
-    } else {
-        echo " value='" . $data["$key"] . "'";
+    } elseif ($key == 'Product') {
+        echo " maxlength='30' value='" . $data["$key"] . "'";
+    } elseif ($key == 'Description') {
+        echo " maxlength='120' value='" . $data["$key"] . "'";
     }
     echo " class='form-control' name='$key' id='$key' placeholder='$key' required>\n";
     // If error is present with input, display error icon in input box
