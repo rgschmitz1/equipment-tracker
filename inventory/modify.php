@@ -19,9 +19,9 @@ $updatelist = array('Product' => 'product',
 
 $results = $inventory_api->dbFetchProduct($itemid);
 
-// There should be only one item that matches the item id in the database
+// There should be only one product that matches the item id in the database
 if (count($results) == 0) {
-    exit("<div class='container'>Invalid itemid #$itemid, try again.</div>");
+    exit("<div class='container'>Invalid itemid #$itemid, try again.</div>\n");
 } elseif (count($results) == 3) {
     foreach ($updatelist as $key => $value) {
         $data["$key"] = $results["$value"];
@@ -97,12 +97,13 @@ foreach ($updatelist as $key => $value) {
     } else {
         echo "<div class='col-sm-3'>\n";
     }
+    echo "<input type='text'";
     if ($key == 'Serial') {
-        echo "<input type='number' min='1' max='99999999' ";
+        echo " maxlength='8' pattern='\d{8}' value='" . str_pad($data['Serial'], 8, '0', STR_PAD_LEFT) . "'";
     } else {
-        echo "<input type='text' ";
+        echo " value='" . $data["$key"] . "'";
     }
-    echo "class='form-control' name='$key' id='$key' value='" . $data["$key"] . "' placeholder='$key' required>\n";
+    echo " class='form-control' name='$key' id='$key' placeholder='$key' required>\n";
     // If error is present with input, display error icon in input box
     if (isset($error["$key"]) && ($error["$key"])) {
         echo "<span class='glyphicon glyphicon-remove form-control-feedback' aria-hidden='true'></span>\n";

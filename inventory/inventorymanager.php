@@ -1,7 +1,7 @@
 <?php
 require_once('../dbmanager.php');
 class InventoryManager extends DbManager {
-    // Unclaim all products for specific user
+    // Claim product for a specific user
     function dbClaimProduct($id, $user) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -18,7 +18,7 @@ class InventoryManager extends DbManager {
             return false;
         }
     }
-    // Unclaim all products for specific user
+    // Unclaim all products for a specific user
     function dbUnclaimAll($id) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -34,7 +34,7 @@ class InventoryManager extends DbManager {
             return false;
         }
     }
-    // Update product
+    // Modify product information
     function dbModifyProduct($product, $description, $serial, $id) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -52,7 +52,7 @@ class InventoryManager extends DbManager {
             echo $ex->getMessage();
         }
     }
-    // Create new product
+    // Add new product
     function dbNewProduct($product, $description, $serial) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

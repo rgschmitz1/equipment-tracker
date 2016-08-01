@@ -73,13 +73,14 @@ foreach ($list as $key => $value) {
     } else {
         echo "<div class='col-sm-3'>\n";
     }
+    echo "<input type='text'";
     if ($key == 'Serial') {
-        echo "<input type='number' min='1' max='99999999'";
-    } else {
-        echo "<input type='text'";
+        echo " maxlength='8' pattern='\d{8}'";
     }
     echo " class='form-control' name='$key' id='$key' placeholder='$value'";
-    if (!empty($data["$key"])) echo "value='" . $data["$key"] . "' ";
+    if (!empty($data["$key"])) {
+        echo " value='" . $data["$key"] . "'";
+    }
     echo " required>\n";
     // If error is present with input, display error icon in input box
     if (isset($error["$key"]) && ($error["$key"])) {

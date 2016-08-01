@@ -4,7 +4,7 @@ require_once('../users/authenticateuser.php');
 if (isset($_POST['delete'])) {
     require_once('inventorymanager.php');
     $inventory_api = new InventoryManager();
-    // Delete user if all products successfully unclaimed
+    // Delete user if all products are successfully unclaimed
     if ($inventory_api->dbDeleteProduct($_POST['delete'])) {
         header('Location: ' . $_POST['navafterdel']);
     } else {
