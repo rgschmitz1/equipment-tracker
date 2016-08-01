@@ -74,7 +74,7 @@ foreach ($list as $key => $value) {
         echo "<div class='col-sm-3'>\n";
     }
     if ($key == 'Serial') {
-        echo "<input type='number' min='10000000' max='99999999'";
+        echo "<input type='number' min='1' max='99999999'";
     } else {
         echo "<input type='text'";
     }
