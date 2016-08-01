@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `adminusers` (
 CREATE TABLE IF NOT EXISTS `products` (
     `id` INT AUTO_INCREMENT,
     `product` VARCHAR(30),
-    `description` VARCHAR(80),
+    `description` VARCHAR(120),
     `serial` INT,
     `user_id` INT DEFAULT 1,
     PRIMARY KEY (`id`)

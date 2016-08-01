@@ -51,7 +51,7 @@ foreach ($results as $record) {
 ?>
             <tr>
                 <td><a href="http://webapps.xes-mad.com/support/perl/apps/prodTracking/mfg.pl?mode=display&amp;serNum=<?= $record['serial'] ?>&amp;product=<?= $record['product'] ?>"><?= $record['serial'] ?></a></td>
-                <td><?= $record['description'] ?></td>
+                <td><?php echo substr($record['description'], 0, 95); ?></td>
 <?php
     if ($users_api->authorizeAdmin()) {
 ?>
@@ -75,7 +75,6 @@ foreach ($results as $record) {
             echo "<input type='hidden' name='user' value='" . $_SESSION['xes_userid'] . "'>\n";
             echo "<button class='btn btn-warning'";
         }
-        // This doesn't work yet...
         echo " type='submit' name='claim' value='" . $record['id'] . "'>" . $record['username'] . "</button>\n";
         echo "</form>\n";
     }
