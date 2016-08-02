@@ -101,8 +101,8 @@ class UserManager extends DbManager {
         if (!isset($_SESSION))
             session_start();
         if (!isset($_SESSION['xes_userid']) && !isset($_SESSION['xes_adminid'])) {
-            if ((SITE_ROOT . $_SERVER['PHP_SELF'] != SITE_ROOT . '/users/login.php') &&
-                (SITE_ROOT . $_SERVER['PHP_SELF'] != SITE_ROOT . '/users/adminlogin.php')) {
+            if (('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] != SITE_ROOT . '/users/login.php') &&
+                ('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] != SITE_ROOT . '/users/adminlogin.php')) {
                 header('Location: ' . SITE_ROOT . '/users/login.php');
             }
         }
