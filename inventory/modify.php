@@ -4,7 +4,7 @@ require_once('inventorymanager.php');
 $inventory_api = new InventoryManager();
 
 if (!isset($_GET['item_id']) && !isset($_POST['item_id'])) {
-    header('Location: inded.php');
+    header('Location: index.php');
 } elseif (isset($_GET['item_id']) && !empty($_GET['item_id'])) {
     $nav_after_mod = $_GET['navaftermod'];
     $itemid = $_GET['item_id'];
@@ -37,6 +37,9 @@ if (isset($_POST['submit'])) {
     // Check each input is set
     foreach ($updatelist as $key => $value) {
         $error["$key"] = false;
+        if (!$users_api->authorizeAdmin() && (($key == 'Product') || ($key == 'Serial'))) {
+            continue;
+        }
         if (isset($_POST["$key"]) && !empty($_POST["$key"])) {
             $data["$key"] = $_POST["$key"];
         } else {
@@ -71,16 +74,16 @@ echo "<div class='container'>\n";
 // Check if errors exist in form
 if (!empty($error_msg)) {
 ?>
-    <div class="alert alert-dismissible alert-danger">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <div class='alert alert-dismissible alert-danger'>
+        <button type='button' class='close' data-dismiss='alert'>&times;</button>
         <p><?= $error_msg ?></p>
     </div>
 <?php
 }
 ?>
-    <div class="well">
+    <div class='well'>
         <legend>Modify Product</legend>
-        <form class="form-horizontal" action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
+        <form class='form-horizontal' action='<?= $_SERVER['PHP_SELF'] ?>' method='post'>
             <fieldset>
 <?php
 // Display modify item form below
@@ -97,15 +100,40 @@ foreach ($updatelist as $key => $value) {
     } else {
         echo "<div class='col-sm-3'>\n";
     }
-    echo "<input type='text'";
     if ($key == 'Serial') {
-        echo " maxlength='8' pattern='\d{8}' value='" . str_pad($data['Serial'], 8, '0', STR_PAD_LEFT) . "'";
+        echo "<input type='text' maxlength='8' pattern='\d{8}' class='form-control' name='$key' placeholder='$key'";
+        if (!empty($data["$key"])) {
+            echo " value='" . $data["$key"] . "'";
+        }
+        if ($users_api->authorizeAdmin()) {
+            echo " required>\n";
+        } else {
+            echo " disabled>\n";
+        }
     } elseif ($key == 'Product') {
-        echo " maxlength='30' value='" . $data["$key"] . "'";
+        // Generate a list of active products
+        $products = $inventory_api->dbXesappsProducts();
+        echo "<select class='form-control' name='$key'";
+        if ($users_api->authorizeAdmin()) {
+            echo ">\n";
+        } else {
+            echo " disabled>\n";
+        }
+        foreach ($products as $product => $prodvalue) {
+            if ($data["$key"] == $prodvalue[0]) {
+                echo "<option selected='selected' value='$prodvalue[0]'>$prodvalue[0]</option>\n";
+            } else {
+                echo "<option value='$prodvalue[0]'>$prodvalue[0]</option>\n";
+            }
+        }
+        echo "</select>\n";
     } elseif ($key == 'Description') {
-        echo " maxlength='120' value='" . $data["$key"] . "'";
+        echo "<input type='text' maxlength='120' class='form-control' name='$key' placeholder='$key'";
+        if (!empty($data["$key"])) {
+            echo " value='" . $data["$key"] . "'";
+        }
+        echo " required>\n";
     }
-    echo " class='form-control' name='$key' id='$key' placeholder='$key' required>\n";
     // If error is present with input, display error icon in input box
     if (isset($error["$key"]) && ($error["$key"])) {
         echo "<span class='glyphicon glyphicon-remove form-control-feedback' aria-hidden='true'></span>\n";
@@ -113,16 +141,53 @@ foreach ($updatelist as $key => $value) {
     echo "</div>\n</div>\n";
 }
 ?>
-                <input type="hidden" name="item_id" value="<?= $itemid ?>">
-                <input type="hidden" name="navaftermod" value="<?= $nav_after_mod ?>">
-                <div class="form-group">
-                    <div class="col-sm-1 col-sm-offset-2">
-                        <button type="submit" name="submit" value="submit" class="btn btn-primary">Submit</button>
+                <input type='hidden' name='item_id' value='<?= $itemid ?>'>
+                <input type='hidden' name='navaftermod' value='<?= $nav_after_mod ?>'>
+                <div class='form-group'>
+                    <div class='col-sm-1 col-sm-offset-2'>
+                        <button type='submit' name='submit' value='submit' class='btn btn-primary'>Submit</button>
                     </div>
+<?php
+if ($users_api->authorizeAdmin()) {
+?>
+                    <div class='col-sm-offset-3'>
+                        <button class='btn btn-danger' type='button' data-toggle='modal' data-target='#deleteModal' data-backdrop='static'>Delete</button>
+                    </div>
+<?php
+}
+?>
                 </div>
             </fieldset>
         </form>
     </div>
+<?php
+if ($users_api->authorizeAdmin()) {
+?>
+    <!-- Delete Modal -->
+    <div id='deleteModal' class='modal' role='dialog'>
+        <div class='modal-dialog'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal'>&times;</button>
+                    <h4 class='modal-title'>Delete Product</h4>
+                </div>
+                <div class='modal-body'>
+                    <p>Please confirm you would like to delete <b><?= $data['Product'] ?></b>, with serial number <b><?= $data['Serial'] ?></b>.</p>
+                </div>
+                <div class='modal-footer'>
+                    <form action='delete.php' method='post' role='form'>
+                        <input type='hidden' name='navafterdel' value='<?= $nav_after_mod ?>'>
+                        <input type='hidden' name='serial' value='<?= $data['Serial'] ?>'>
+                        <button type='submit' name='delete' value='<?= $itemid ?>' class='btn btn-danger'>Confirm</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete Modal End -->
+<?php
+}
+?>
 </div>
 <?php
 require_once('../footer.php');

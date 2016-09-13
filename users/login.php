@@ -16,8 +16,20 @@ if (!isset($_SESSION['xes_userid']) && isset($_POST['submit'])) {
         $data = $users_api->dbUserLogin($user_username);
 
         if (count($data) == 0) {
-            $error_msg = 'Invalid username entered, try again.';
-        } elseif (count($data) == 1) {
+            // User does not exist in database, check LDAP server
+        if ($users_api->ldapSearch($user_username, '')) {
+                $result = $users_api->dbCreateUser($user_username);
+                if ($result = 0) {
+                    $users_api->dbError();
+                } else {
+                    $users_api->dbClose();
+                }
+                $data = $users_api->dbUserLogin($user_username);
+            } else {
+                $error_msg = 'Invalid username entered, try again.';
+	    }
+        }
+        if (count($data) == 1) {
             // Login is OK, set the SESSION username and id, then redirect to homepage
             $_SESSION['xes_username'] = $user_username;
             foreach ($data as $value) {
@@ -25,7 +37,7 @@ if (!isset($_SESSION['xes_userid']) && isset($_POST['submit'])) {
             }
             $users_api->dbClose();
             header('Location: ' . SITE_ROOT);
-        } else {
+        } elseif (count($data) > 1) {
             $error_msg = 'Duplicate username exists in database, admin must fix!';
         }
     }
@@ -37,27 +49,26 @@ echo "<div class='container'>\n";
 if (empty($_SESSION['xes_userid'])) {
     if (!empty($error_msg)) {
 ?>
-    <div class="alert alert-dismisable alert-danger">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <div class='alert alert-dismissible alert-danger'>
+        <button type='button' class='close' data-dismiss='alert'>&times;</button>
         <p><?= $error_msg ?></p>
     </div>
 <?php
     }
 ?>
-    <div class="well center-login">
+    <div class='well center-login'>
         <legend>Login</legend>
-        <form method="post" action="<?= $_SERVER['PHP_SELF'] ?>">
+        <form method='post' action='<?= $_SERVER['PHP_SELF'] ?>'>
             <fieldset>
-                <div class="form-group text-left">
-                    <input type="text" class="form-control" value="<?php if (!empty($user_username)) { echo $user_username; } ?>"
-                     id="username" name="username" placeholder="Username" required>
+                <div class='form-group text-left'>
+                    <input type='text' class='form-control' value='<?php if (!empty($user_username)) { echo $user_username; } ?>' name='username' placeholder='Username' required>
                 </div>
-                <div class="form-group">
-                    <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+                <div class='form-group'>
+                    <button type='submit' name='submit' class='btn btn-primary'>Submit</button>
                 </div>
             </fieldset>
         </form>
-        <p><a href="adminlogin.php">Admin Login Page</a></p>
+        <p><a href='adminlogin.php'>Admin Login Page</a></p>
     </div>
 <?php
 } else {

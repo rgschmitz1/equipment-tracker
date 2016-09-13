@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS mfgtest;
+CREATE DATABASE IF NOT EXISTS manufacturing;
 
-USE mfgtest;
+USE manufacturing;
 
 CREATE TABLE IF NOT EXISTS `users` (
     `id` INT AUTO_INCREMENT,
@@ -19,8 +19,17 @@ CREATE TABLE IF NOT EXISTS `products` (
     `id` INT AUTO_INCREMENT,
     `product` VARCHAR(30),
     `description` VARCHAR(120),
-    `serial` INT,
+    `serial` INT(8) UNSIGNED ZEROFILL,
+    `last_claim_id` INT,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `claim_history` (
+    `id` INT AUTO_INCREMENT,
+    `product_id` INT,
     `user_id` INT DEFAULT 1,
+    `claim_date` DATETIME,
+    `approved` TINYINT(1),
     PRIMARY KEY (`id`)
 );
 

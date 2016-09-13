@@ -1,4 +1,10 @@
 /* custom stylesheet */
+table.floatThead-table {
+  background-color:#fff;
+}
+table.table.dataTable.floatThead-table {
+  margin-top:0px !important;
+}
 html {
   position:relative;
   min-height:100%;
@@ -24,8 +30,4 @@ body {
   width:280px;
   margin:auto;
   text-align:center;
-}
-.navbar-brand {
-  text-shadow:2px 2px 1px #d0d0d0;
-  font-family:times new roman;
 }

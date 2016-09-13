@@ -47,32 +47,32 @@ echo "<div class='container'>\n";
 // Check if errors exist in form
 if (!empty($error_msg)) {
 ?>
-    <div class="alert alert-dismissible alert-danger">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <div class='alert alert-dismissible alert-danger'>
+        <button type='button' class='close' data-dismiss='alert'>&times;</button>
         <p><?= $error_msg ?></p>
     </div>
 <?php
 }
 ?>
-    <div class="well">
+    <div class='well'>
         <legend>Add User</legend>
-        <form class="form-horizontal" action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
+        <form class='form-horizontal' action='<?= $_SERVER['PHP_SELF'] ?>' method='post'>
             <fieldset>
 <?php
 // Display new user form below
 // Highlight form input as in error if flagged as having an issue
 if (isset($error['username']) && ($error['username'])) {
 ?>
-                <div class="form-group has-error has-feedback">
+                <div class='form-group has-error has-feedback'>
 <?php
 } else {
 ?>
-                <div class="form-group">
+                <div class='form-group'>
 <?php
 }
 ?>
-                    <label for="username" class="col-sm-2 control-label">Username</label>
-                    <div class="col-sm-3">
+                    <label for='username' class='col-sm-2 control-label'>Username</label>
+                    <div class='col-sm-3'>
 <?php
 echo "<input type='text' maxlength='30' class='form-control' name='username' id='username' placeholder='Username'";
 if (!empty($data['username'])) {
@@ -86,9 +86,9 @@ if (isset($error['username']) && ($error['username'])) {
 ?>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-1 col-sm-offset-2">
-                        <button type="submit" name="submit" value="submit" class="btn btn-primary">Submit</button>
+                <div class='form-group'>
+                    <div class='col-sm-1 col-sm-offset-2'>
+                        <button type='submit' name='submit' value='submit' class='btn btn-primary'>Submit</button>
                     </div>
                 </div>
             </fieldset>

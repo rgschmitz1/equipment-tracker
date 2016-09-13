@@ -1,6 +1,6 @@
 <?php
-require_once('../appvars.php');
-session_start();
+require_once('../startsession.php');
+startAppSession();
 // Delete session array
 $_SESSION = array();
 session_destroy();

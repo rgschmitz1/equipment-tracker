@@ -28,12 +28,11 @@ if (isset($_POST['submit'])) {
         $serial = $data['Serial'];
 
         if ($inventory_api->dbCheckDuplicateProduct($serial) == 0) {
-            $result = $inventory_api->dbNewProduct($product, $description, $serial);
-            if ($result == 0) {
-                $inventory_api->dbError();
-            } else {
+            if ($inventory_api->dbNewProduct($product, $description, $serial)) {
                 $inventory_api->dbClose();
                 header("Location: index.php?item");
+            } else {
+                $inventory_api->dbError();
             }
         } else {
             $error['Serial'] = true;
@@ -46,16 +45,16 @@ echo "<div class='container'>\n";
 // Check if errors exist in form
 if (!empty($error_msg)) {
 ?>
-    <div class="alert alert-dismissible alert-danger">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <div class='alert alert-dismissible alert-danger'>
+        <button type='button' class='close' data-dismiss='alert'>&times;</button>
         <p><?= $error_msg ?></p>
     </div>
 <?php
 }
 ?>
-    <div class="well">
+    <div class='well'>
         <legend>Add Product</legend>
-        <form class="form-horizontal" action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
+        <form class='form-horizontal' action='<?= $_SERVER['PHP_SELF'] ?>' method='post'>
             <fieldset>
 <?php
 
@@ -73,19 +72,27 @@ foreach ($list as $key) {
     } else {
         echo "<div class='col-sm-3'>\n";
     }
-    echo "<input type='text'";
     if ($key == 'Serial') {
-        echo " maxlength='8' pattern='\d{8}'";
+        echo "<input type='text' maxlength='8' pattern='\d{8}' class='form-control' name='$key' placeholder='$key'";
+        if (!empty($data["$key"])) {
+            echo " value='" . $data["$key"] . "'";
+        }
+        echo " required>\n";
     } elseif ($key == 'Product') {
-        echo " maxlength='30'";
+        // Generate a list of active products
+        $products = $inventory_api->dbXesappsProducts();
+        echo "<select class='form-control' name='$key'>\n";
+        foreach ($products as $product => $value) {
+            echo "<option value='$value[0]'>$value[0]</option>\n";
+        }
+        echo "</select>\n";
     } elseif ($key == 'Description') {
-        echo " maxlength='120'";
+        echo "<input type='text' maxlength='120' class='form-control' name='$key' placeholder='$key'";
+        if (!empty($data["$key"])) {
+            echo " value='" . $data["$key"] . "'";
+        }
+        echo " required>\n";
     }
-    echo " class='form-control' name='$key' id='$key' placeholder='$key'";
-    if (!empty($data["$key"])) {
-        echo " value='" . $data["$key"] . "'";
-    }
-    echo " required>\n";
     // If error is present with input, display error icon in input box
     if (isset($error["$key"]) && ($error["$key"])) {
         echo "<span class='glyphicon glyphicon-remove form-control-feedback' aria-hidden='true'></span>\n";
@@ -93,9 +100,9 @@ foreach ($list as $key) {
     echo "</div>\n</div>\n";
 }
 ?>
-                <div class="form-group">
-                    <div class="col-sm-1 col-sm-offset-2">
-                        <button type="submit" name="submit" value="submit" class="btn btn-primary">Submit</button>
+                <div class='form-group'>
+                    <div class='col-sm-1 col-sm-offset-2'>
+                        <button type='submit' name='submit' value='submit' class='btn btn-primary'>Submit</button>
                     </div>
                 </div>
             </fieldset>

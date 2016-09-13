@@ -1,9 +1,14 @@
 <?php
+require_once('appvars.php');
 abstract class DbManager {
     // Set database connect variable
     protected function dbConnect() {
-        $dbc = new PDO('mysql:host=localhost;dbname=mfgtest', 'root', '')
-            or exit('Error connecting to MySQL server.');
+        try {
+            $dbc = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASS);
+        } catch (PDOException $e) {
+            print 'Error!: ' . $e->getMessage() . '<br/>';
+            die();
+        }
         return $dbc;
     }
 
@@ -15,6 +20,6 @@ abstract class DbManager {
 
     // Return database error
     function dbError() {
-        exit("Database query error.");
+        exit('Database query error.');
     }
 }
