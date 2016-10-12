@@ -1,11 +1,14 @@
 <?php
 require_once('../header.php');
-require_once('inventorymanager.php');
-$inventory_api = new InventoryManager();
+require_once('equipmentmanager.php');
+$equipment_api = new EquipmentManager();
 
 $list = array('Product',
               'Description',
-              'Serial');
+              'Serial',
+              'CfgNum',
+              'Revision',
+              'ECO');
 
 // If user has submitted form, check user input
 if (isset($_POST['submit'])) {
@@ -14,7 +17,9 @@ if (isset($_POST['submit'])) {
     foreach ($list as $key) {
         $data["$key"] = '';
         $error["$key"] = false;
-        if (!isset($_POST["$key"]) || empty($_POST["$key"])) {
+        if (($key == 'ECO') && (!isset($_POST["$key"]) || empty($_POST["$key"]))) {
+            $data['ECO'] = '0';
+        } elseif (!isset($_POST["$key"]) || empty($_POST["$key"])) {
             $error_msg = 'All fields must be filled in, try again.';
             $error["$key"] = true;
         } else {
@@ -26,13 +31,16 @@ if (isset($_POST['submit'])) {
         $product = $data['Product'];
         $description = $data['Description'];
         $serial = $data['Serial'];
+        $cfgnum = $data['CfgNum'];
+        $revision = $data['Revision'];
+        $eco = $data['ECO'];
 
-        if ($inventory_api->dbCheckDuplicateProduct($serial) == 0) {
-            if ($inventory_api->dbNewProduct($product, $description, $serial)) {
-                $inventory_api->dbClose();
+        if ($equipment_api->dbCheckDuplicateProduct($serial) == 0) {
+            if ($equipment_api->dbNewProduct($product, $description, $serial, $cfgnum, $revision, $eco)) {
+                $equipment_api->dbClose();
                 header("Location: index.php?item");
             } else {
-                $inventory_api->dbError();
+                $equipment_api->dbError();
             }
         } else {
             $error['Serial'] = true;
@@ -80,14 +88,36 @@ foreach ($list as $key) {
         echo " required>\n";
     } elseif ($key == 'Product') {
         // Generate a list of active products
-        $products = $inventory_api->dbXesappsProducts();
+        $products = $equipment_api->dbXesappsProducts();
         echo "<select class='form-control' name='$key'>\n";
         foreach ($products as $product => $value) {
-            echo "<option value='$value[0]'>$value[0]</option>\n";
+            if (!empty($data["$key"]) && ($data["$key"] == $value[0])) {
+                echo "<option value='$value[0]' selected>$value[0]</option>\n";
+            } else {
+                echo "<option value='$value[0]'>$value[0]</option>\n";
+            }
         }
         echo "</select>\n";
     } elseif ($key == 'Description') {
         echo "<input type='text' maxlength='120' class='form-control' name='$key' placeholder='$key'";
+        if (!empty($data["$key"])) {
+            echo " value='" . $data["$key"] . "'";
+        }
+        echo " required>\n";
+    } elseif ($key == 'CfgNum') {
+        echo "<input type='text' maxlength='12' pattern='\d{8}-\d+' class='form-control' name='$key' placeholder='$key'";
+        if (!empty($data["$key"])) {
+            echo " value='" . $data["$key"] . "'";
+        }
+        echo " required>\n";
+    } elseif ($key == 'Revision') {
+        echo "<input type='text' maxlength='3' class='form-control' name='$key' placeholder='$key'";
+        if (!empty($data["$key"])) {
+            echo " value='" . $data["$key"] . "'";
+        }
+        echo " required>\n";
+    } elseif ($key == 'ECO') {
+        echo "<input type='text' maxlength='2' pattern'\d+' class='form-control' name='$key' placeholder='$key'";
         if (!empty($data["$key"])) {
             echo " value='" . $data["$key"] . "'";
         }

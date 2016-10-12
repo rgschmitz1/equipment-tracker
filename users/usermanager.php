@@ -28,11 +28,11 @@ class UserManager extends DbManager {
     function emailAdmin($username, $product, $serial) {
         $fullname = $this->ldapSearch($username, '1');
         $to = ADMIN_EMAIL;
-        $subject = 'Inventory Webapp Checkout';
+        $subject = SITE_TITLE . ' Webapp Checkout';
         $message = '<html><body>';
         $message .= "<b>$fullname</b> has checked out a <b>$product</b> with serial number ";
         $message .= "<a href='http://webapps.xes-mad.com/support/perl/apps/prodTracking/mfg.pl?mode=display&amp;serNum=$serial&amp;product=$product'>$serial</a>";
-        $message .= ", login to the <a href='" . SITE_ROOT . "/users/adminlogin.php'>Inventory Webapp</a> to authorize claim.";
+        $message .= ", login to the <a href='" . SITE_ROOT . "/users/adminlogin.php'>Equipment Webapp</a> to authorize claim.";
         $message .= "</body></html>";
         $headers = "From: $username@xes-mad.com\r\n";
         $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
@@ -44,23 +44,22 @@ class UserManager extends DbManager {
             return;
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "SELECT id FROM users WHERE username=:username";
+        $query = "SELECT `id` FROM `users` WHERE `username`=:username";
         try {
             $sql = $dbc->prepare($query);
             $sql->bindParam(":username", $username);
             $sql->execute();
-            return $sql->fetchAll(PDO::FETCH_ASSOC);
+            return $sql->fetch(PDO::FETCH_ASSOC);
         } catch(Exception $ex) {
             echo "what the heck<br />";
             echo $ex->getMessage();
-            return false;
         }
     }
     // Login admin user
     function dbAdminUserLogin($username) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "SELECT id, password FROM adminusers WHERE username=:username";
+        $query = "SELECT `id`, `password` FROM `adminusers` WHERE `username`=:username";
         try {
             $sql = $dbc->prepare($query);
             $sql->bindParam(":username", $username);
@@ -76,12 +75,12 @@ class UserManager extends DbManager {
     function dbCreateUser($username) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "INSERT INTO users (username) VALUES (:username)";
+        $query = "INSERT INTO `users` (`username`) VALUES (:username)";
         try {
             $sql = $dbc->prepare($query);
             $sql->bindParam(":username", $username);
             $sql->execute();
-            return $sql->rowCount();
+            return true;
         } catch(Exception $ex) {
             echo "what the heck<br />";
             echo $ex->getMessage();
@@ -92,7 +91,7 @@ class UserManager extends DbManager {
     function dbDeleteUser($id) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "DELETE FROM users WHERE id=:id";
+        $query = "DELETE FROM `users` WHERE `id`=:id";
         try {
             $sql = $dbc->prepare($query);
             $sql->bindParam(":id", $id);
@@ -108,7 +107,7 @@ class UserManager extends DbManager {
     function dbCheckDuplicateUser($username) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "SELECT id FROM users WHERE username=:username";
+        $query = "SELECT `id` FROM `users` WHERE `username`=:username";
         try {
             $sql = $dbc->prepare($query);
             $sql->bindParam(":username", $username);
@@ -124,7 +123,7 @@ class UserManager extends DbManager {
     function dbQueryUsers() {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "SELECT id, username FROM users WHERE username NOT LIKE 'Unclaimed' ORDER BY username";
+        $query = "SELECT `id`, `username` FROM `users` WHERE `username` NOT LIKE 'Unclaimed' ORDER BY `username`";
         try {
             $sql = $dbc->prepare($query);
             $sql->execute();

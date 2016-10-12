@@ -5,7 +5,7 @@ function startAppSession() {
     if ((session_save_path() != SESSION_DIR) || !isset($_SESSION)) {
         // Check if session directory exists or create it here
         if (!is_dir(SESSION_DIR)) {
-            mkdir(SESSION_DIR, 0777);
+            mkdir(SESSION_DIR, 0750);
         }
         session_save_path(SESSION_DIR);
         session_start();

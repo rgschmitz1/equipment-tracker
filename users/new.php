@@ -74,11 +74,11 @@ if (isset($error['username']) && ($error['username'])) {
                     <label for='username' class='col-sm-2 control-label'>Username</label>
                     <div class='col-sm-3'>
 <?php
-echo "<input type='text' maxlength='30' class='form-control' name='username' id='username' placeholder='Username'";
+echo "<input type='text' maxlength='30' class='form-control' name='username' placeholder='Username'";
 if (!empty($data['username'])) {
     echo " value='" . $data['username'] . "'";
 }
-echo " required>\n";
+echo " autofocus required>\n";
 // If error is present with input, display error icon in input box
 if (isset($error['username']) && ($error['username'])) {
     echo "<span class='glyphicon glyphicon-remove form-control-feedback' aria-hidden='true'></span>\n";

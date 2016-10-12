@@ -26,18 +26,6 @@ $users_api->authenticateUser();
     <!-- DataTables plugin -->
     <script src='<?= SITE_ROOT ?>/js/jquery.dataTables.min.js'></script>
     <script src='<?= SITE_ROOT ?>/js/dataTables.bootstrap.min.js'></script>
-    <script>
-    $(document).ready(function(){
-        // Hide product filter on non-inventory pages
-        var currentLocation = window.location.href;
-        currentLocation = currentLocation.split("?")[0].split("#")[0];
-        if (currentLocation != '<?= SITE_ROOT ?>/inventory/index.php' &&
-            currentLocation != '<?= SITE_ROOT ?>/inventory/myindex.php' &&
-            currentLocation != '<?= SITE_ROOT ?>/inventory/claimedindex.php') {
-            $('#filterbox-container').hide();
-        }
-    });
-    </script>
 </head>
 <body>
 <?php

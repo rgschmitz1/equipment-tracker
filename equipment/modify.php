@@ -1,7 +1,8 @@
 <?php
 require_once('../header.php');
-require_once('inventorymanager.php');
-$inventory_api = new InventoryManager();
+require_once('equipmentmanager.php');
+$equipment_api = new EquipmentManager();
+$admin_user = $users_api->authorizeAdmin();
 
 if (!isset($_GET['item_id']) && !isset($_POST['item_id'])) {
     header('Location: index.php');
@@ -15,14 +16,17 @@ if (!isset($_GET['item_id']) && !isset($_POST['item_id'])) {
 
 $updatelist = array('Product' => 'product',
                     'Description' => 'description',
-                    'Serial' => 'serial');
+                    'Serial' => 'serial',
+                    'CfgNum' => 'cfgnum',
+                    'Revision' => 'revision',
+                    'ECO' => 'eco');
 
-$results = $inventory_api->dbFetchProduct($itemid);
+$results = $equipment_api->dbFetchProduct($itemid);
 
 // There should be only one product that matches the item id in the database
 if (count($results) == 0) {
     exit("<div class='container'>Invalid itemid #$itemid, try again.</div>\n");
-} elseif (count($results) == 3) {
+} else {
     foreach ($updatelist as $key => $value) {
         $data["$key"] = $results["$value"];
         if ($key == 'Serial') {
@@ -37,10 +41,13 @@ if (isset($_POST['submit'])) {
     // Check each input is set
     foreach ($updatelist as $key => $value) {
         $error["$key"] = false;
-        if (!$users_api->authorizeAdmin() && (($key == 'Product') || ($key == 'Serial'))) {
+        if ((!$admin_user) &&
+            ($key == 'Product' || $key == 'Serial' || $key == 'CfgNum' || $key == 'Revision' || $key == 'ECO')) {
             continue;
         }
-        if (isset($_POST["$key"]) && !empty($_POST["$key"])) {
+        if (($key == 'ECO') && (!isset($_POST["$key"]) || empty($_POST["$key"]))) {
+            $data['ECO'] = '0';
+        } elseif (isset($_POST["$key"]) && !empty($_POST["$key"])) {
             $data["$key"] = $_POST["$key"];
         } else {
             $error_msg = 'All fields must be filled in, try again.';
@@ -52,16 +59,24 @@ if (isset($_POST['submit'])) {
         $product = $data['Product'];
         $description = $data['Description'];
         $serial = $data['Serial'];
+        $cfgnum = $data['CfgNum'];
+        $revision = $data['Revision'];
+        $eco = $data['ECO'];
 
-        if ($product == $results['product'] && $description == $results['description'] && $serial == $results['serial']) {
+        if ($product == $results['product'] &&
+            $description == $results['description'] &&
+            $serial == $results['serial'] &&
+            $cfgnum == $results['cfgnum'] &&
+            $revision == $results['revision'] &&
+            $eco == $results['eco']) {
             $error_msg = 'One of the below fields must be edited to proceed';
-        } elseif ($inventory_api->dbCheckDuplicateProduct($serial) == 0 || $serial == $previous_serial) {
-            $result = $inventory_api->dbModifyProduct($product, $description, $serial, $itemid);
+        } elseif ($equipment_api->dbCheckDuplicateProduct($serial) == 0 || $serial == $previous_serial) {
+            $result = $equipment_api->dbModifyProduct($itemid, $product, $description, $serial, $cfgnum, $revision, $eco);
             if ($result == 1) {
-                $inventory_api->dbClose();
+                $equipment_api->dbClose();
                 header("Location: $nav_after_mod?item");
             } else {
-                $inventory_api->dbError();
+                $equipment_api->dbError();
             }
         } else {
             $error['Serial'] = true;
@@ -105,23 +120,23 @@ foreach ($updatelist as $key => $value) {
         if (!empty($data["$key"])) {
             echo " value='" . $data["$key"] . "'";
         }
-        if ($users_api->authorizeAdmin()) {
+        if ($admin_user) {
             echo " required>\n";
         } else {
             echo " disabled>\n";
         }
     } elseif ($key == 'Product') {
         // Generate a list of active products
-        $products = $inventory_api->dbXesappsProducts();
+        $products = $equipment_api->dbXesappsProducts();
         echo "<select class='form-control' name='$key'";
-        if ($users_api->authorizeAdmin()) {
+        if ($admin_user) {
             echo ">\n";
         } else {
             echo " disabled>\n";
         }
         foreach ($products as $product => $prodvalue) {
             if ($data["$key"] == $prodvalue[0]) {
-                echo "<option selected='selected' value='$prodvalue[0]'>$prodvalue[0]</option>\n";
+                echo "<option value='$prodvalue[0]' selected>$prodvalue[0]</option>\n";
             } else {
                 echo "<option value='$prodvalue[0]'>$prodvalue[0]</option>\n";
             }
@@ -133,6 +148,38 @@ foreach ($updatelist as $key => $value) {
             echo " value='" . $data["$key"] . "'";
         }
         echo " required>\n";
+    } elseif ($key == 'CfgNum') {
+        echo "<input type='text' maxlength='12' pattern='\d{8}-\d+' class='form-control' name='$key' placeholder='$key'";
+        if (!empty($data["$key"])) {
+            echo " value='" . $data["$key"] . "'";
+        }
+        if ($admin_user) {
+            echo " required>\n";
+        } else {
+            echo " disabled>\n";
+        }
+    } elseif ($key == 'Revision') {
+        echo "<input type='text' maxlength='3' class='form-control' name='$key' placeholder='$key'";
+        if (!empty($data["$key"])) {
+            echo " value='" . $data["$key"] . "'";
+        }
+        if ($admin_user) {
+            echo " required>\n";
+        } else {
+            echo " disabled>\n";
+        }
+    } elseif ($key == 'ECO') {
+        echo "<input type='text' maxlength='2' pattern'\d+' class='form-control' name='$key' placeholder='$key'";
+        if (!empty($data["$key"])) {
+            echo " value='" . $data["$key"] . "'";
+        } else {
+            echo " value='0'";
+        }
+        if ($admin_user) {
+            echo " required>\n";
+        } else {
+            echo " disabled>\n";
+        }
     }
     // If error is present with input, display error icon in input box
     if (isset($error["$key"]) && ($error["$key"])) {
@@ -148,7 +195,7 @@ foreach ($updatelist as $key => $value) {
                         <button type='submit' name='submit' value='submit' class='btn btn-primary'>Submit</button>
                     </div>
 <?php
-if ($users_api->authorizeAdmin()) {
+if ($admin_user) {
 ?>
                     <div class='col-sm-offset-3'>
                         <button class='btn btn-danger' type='button' data-toggle='modal' data-target='#deleteModal' data-backdrop='static'>Delete</button>
@@ -161,7 +208,7 @@ if ($users_api->authorizeAdmin()) {
         </form>
     </div>
 <?php
-if ($users_api->authorizeAdmin()) {
+if ($admin_user) {
 ?>
     <!-- Delete Modal -->
     <div id='deleteModal' class='modal' role='dialog'>

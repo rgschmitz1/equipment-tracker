@@ -1,11 +1,11 @@
 <?php
-define('SITE_TITLE', 'Manufacturing Inventory');
-define('SITE_ROOT', 'http://' . $_SERVER['HTTP_HOST'] . '/mfg');
-define('SESSION_DIR', '/tmp/mfg');
+define('SITE_TITLE', 'MfgTest Equipment');
+define('SITE_ROOT', 'http://' . $_SERVER['HTTP_HOST'] . '/mfgtest');
+define('SESSION_DIR', '/tmp/mfgtest');
 // Define database variables
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'manufacturing');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_HOST', 'engapps');
+define('DB_NAME', 'mfgtest');
+define('DB_USER', 'mfgtest');
+define('DB_PASS', 'w1-r_37B');
 // Define admin email
-define('ADMIN_EMAIL', '<FILL ME IN>');
+define('ADMIN_EMAIL', 'bschmitz@xes-inc.com');

@@ -8,19 +8,19 @@ if (!$users_api->authorizeAdmin()) {
     register_shutdown_function('shutdown');
     exit("<div class='container'>You must be an administrative user to access this page.</div>\n");
 }
-require_once('inventorymanager.php');
-$inventory_api = new InventoryManager();
+require_once('equipmentmanager.php');
+$equipment_api = new EquipmentManager();
 
 if (isset($_POST['authorize'])) {
-    if ($inventory_api->dbAuthorizeClaim($_POST['authorize'])) {
-        $inventory_api->dbClose();
+    if ($equipment_api->dbAuthorizeClaim($_POST['authorize'])) {
+        $equipment_api->dbClose();
     } else {
-        $inventory_api->dbError();
+        $equipment_api->dbError();
     }
 }
 
 // Query unapproved products after authorizing
-$results = $inventory_api->dbQueryUnapprovedProducts();
+$results = $equipment_api->dbQueryUnapprovedProducts();
 ?>
 
 <div class='container'>

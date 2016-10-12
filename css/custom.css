@@ -13,14 +13,14 @@ body {
   /* Margin top by header height */
   padding-top:60px;
   /* Margin bottom by footer height */
-  margin-bottom:60px;
+  margin-bottom:85px;
 }
 .footer {
   position:absolute;
   bottom:0;
   width:100%;
   /* Set the fixed height of the footer here */
-  height:50px;
+  height:75px;
 }
 .dropdown:hover .dropdown-menu {
   /* Trigger drop down on curser hover */

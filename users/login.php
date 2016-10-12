@@ -15,30 +15,28 @@ if (!isset($_SESSION['xes_userid']) && isset($_POST['submit'])) {
         // lookup user from the database
         $data = $users_api->dbUserLogin($user_username);
 
-        if (count($data) == 0) {
+        if (!isset($data) || empty($data)) {
             // User does not exist in database, check LDAP server
-        if ($users_api->ldapSearch($user_username, '')) {
-                $result = $users_api->dbCreateUser($user_username);
-                if ($result = 0) {
-                    $users_api->dbError();
-                } else {
+            if ($users_api->ldapSearch($user_username, '')) {
+                if ($users_api->dbCreateUser($user_username)) {
                     $users_api->dbClose();
+                } else {
+                    $users_api->dbError();
                 }
                 $data = $users_api->dbUserLogin($user_username);
             } else {
                 $error_msg = 'Invalid username entered, try again.';
-	    }
-        }
-        if (count($data) == 1) {
-            // Login is OK, set the SESSION username and id, then redirect to homepage
-            $_SESSION['xes_username'] = $user_username;
-            foreach ($data as $value) {
-                $_SESSION['xes_userid'] = $value['id'];
             }
+        }
+        if (isset($data) && !empty($data)) {
+            // Login is OK, set the SESSION username and id, then redirect to homepage
+            $_SESSION['fullname'] = $users_api->ldapSearch($user_username, '1');
+            $_SESSION['xes_username'] = $user_username;
+            $_SESSION['xes_userid'] = $data['id'];
             $users_api->dbClose();
             header('Location: ' . SITE_ROOT);
-        } elseif (count($data) > 1) {
-            $error_msg = 'Duplicate username exists in database, admin must fix!';
+        } else {
+            $error_msg = 'Invalid username entered, try again.';
         }
     }
 }
@@ -61,7 +59,7 @@ if (empty($_SESSION['xes_userid'])) {
         <form method='post' action='<?= $_SERVER['PHP_SELF'] ?>'>
             <fieldset>
                 <div class='form-group text-left'>
-                    <input type='text' class='form-control' value='<?php if (!empty($user_username)) { echo $user_username; } ?>' name='username' placeholder='Username' required>
+                    <input type='text' class='form-control' value='<?php if (!empty($user_username)) { echo $user_username; } ?>' name='username' placeholder='Username' autofocus required>
                 </div>
                 <div class='form-group'>
                     <button type='submit' name='submit' class='btn btn-primary'>Submit</button>
@@ -77,5 +75,4 @@ if (empty($_SESSION['xes_userid'])) {
 <?php
 }
 echo "</div>\n";
-
 require_once('../footer.php');

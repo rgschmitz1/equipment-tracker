@@ -5,10 +5,10 @@ if (!$users_api->authorizeAdmin())
 
 // If user has submitted form, check user input
 if (isset($_POST['delete'])) {
-    require_once('../inventory/inventorymanager.php');
-    $inventory_api = new InventoryManager();
+    require_once('../equipment/equipmentmanager.php');
+    $equipment_api = new EquipmentManager();
     // Unclaim all products for user to delete
-    if ($inventory_api->dbUnclaimAll($_POST['delete'])) {
+    if ($equipment_api->dbUnclaimAll($_POST['delete'])) {
         // Delete user if all products successfully unclaimed
         if ($users_api->dbDeleteUser($_POST['delete'])) {
             header('Location: index.php');

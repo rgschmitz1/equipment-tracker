@@ -2,9 +2,9 @@
 if (!isset($_GET['id']) || empty($_GET['id']))
     header("Location: $goto_after_mod");
 require_once('../header.php');
-require_once('inventorymanager.php');
-$inventory_api = new InventoryManager();
-$results = $inventory_api->dbFetchClaimHistoryById($_GET['id']);
+require_once('equipmentmanager.php');
+$equipment_api = new EquipmentManager();
+$results = $equipment_api->dbFetchClaimHistoryById($_GET['id']);
 ?>
 <div class='container'>
     <h2><?= $_GET['serial'] ?> History</h2>

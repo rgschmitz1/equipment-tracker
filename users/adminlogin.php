@@ -17,9 +17,11 @@ if (!isset($_SESSION['xes_adminid']) && isset($_POST['submit'])) {
     } else {
         // lookup user from the database
         $data = $users_api->dbAdminUserLogin($user_username, $user_password);
-        if ((count($data) == 0) || (count($data) == 1)) {
+        if (!isset($data) || empty($data)) {
             $error_msg = 'You must enter a valid username and password to login.';
-        } elseif (count($data) == 2) {
+        } elseif (!empty($data['id']) && !empty($data['password'])) {
+            // This verification should be moved to usermanager if php is ever updated to 5.5 or newer
+            // (password_verify function is built into newer version of php)
             if (password_verify($user_password, $data['password'])) {
                 // Login is OK, set the SESSION username and id, then redirect to homepage
                 $_SESSION['xes_username'] = $user_username;
@@ -30,7 +32,7 @@ if (!isset($_SESSION['xes_adminid']) && isset($_POST['submit'])) {
                 $error_msg = 'You must enter a valid username and password to login.';
             }
         } else {
-            $error_msg = 'Duplicate username and password exists in database, admin must fix!';
+            $error_msg = 'You must enter a valid username and password to login.';
         }
     }
 }
@@ -53,7 +55,7 @@ if (empty($_SESSION['xes_adminid'])) {
         <form method='post' action='<?= $_SERVER['PHP_SELF'] ?>'>
             <fieldset>
                 <div class='form-group text-left'>
-                    <input type='text' class='form-control' value='<?php if (!empty($user_username)) { echo $user_username; } ?>' name='username' placeholder='Username' required>
+                    <input type='text' class='form-control' value='<?php if (!empty($user_username)) { echo $user_username; } ?>' name='username' placeholder='Username' autofocus required>
                 </div>
                 <div class='form-group text-left'>
                     <input type='password' class='form-control' name='password' placeholder='Password' required>
@@ -71,5 +73,4 @@ if (empty($_SESSION['xes_adminid'])) {
 <?php
 }
 echo "</div>\n";
-
 require_once('../footer.php');

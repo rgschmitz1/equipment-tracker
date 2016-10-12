@@ -22,30 +22,36 @@ if (isset($_SESSION['xes_userid']) || isset($_SESSION['xes_adminid'])) {
 <?php
     if (!$admin_user) {
 ?>
-                <li><a href='<?= SITE_ROOT ?>/inventory/myindex.php'>My Inventory</a></li>
+                <li><a href='<?= SITE_ROOT ?>/equipment/myindex.php'>My Equipment</a></li>
 <?php
     }
 ?>
                 <li class='dropdown'>
-                    <a href='<?= SITE_ROOT ?>/inventory/index.php' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-expanded='false'>Inventory<span class='caret'></span></a>
+                    <a href='<?= SITE_ROOT ?>/equipment/index.php' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-expanded='false'>Equipment<span class='caret'></span></a>
                     <ul class='dropdown-menu' role='menu'>
 <?php
     if ($admin_user) {
 ?>
-                        <li><a href='<?= SITE_ROOT ?>/inventory/authorize.php'>Authorize</a></li>
+                        <li><a href='<?= SITE_ROOT ?>/equipment/authorize.php'>Authorize</a></li>
                         <li class='divider'></li>
 <?php
     }
 ?>
-                        <li><a href='<?= SITE_ROOT ?>/inventory/index.php'>Index</a></li>
-                        <li><a href='<?= SITE_ROOT ?>/inventory/claimedindex.php'>Claimed</a></li>
-                        <li><a href='<?= SITE_ROOT ?>/inventory/new.php'>New</a></li>
+                        <li><a href='<?= SITE_ROOT ?>/equipment/index.php'>Index</a></li>
+                        <li><a href='<?= SITE_ROOT ?>/equipment/claimedindex.php'>Claimed</a></li>
+                        <li><a href='<?= SITE_ROOT ?>/equipment/new.php'>New</a></li>
                     </ul>
                 </li>
 <?php
     if ($admin_user) {
 ?>
-                <li><a href='<?= SITE_ROOT ?>/users/index.php'>Users</a></li>
+                <li class='dropdown'>
+                    <a href='<?= SITE_ROOT ?>/users/index.php' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-expanded='false'>Users<span class='caret'></span></a>
+                    <ul class='dropdown-menu' role='menu'>
+                        <li><a href='<?= SITE_ROOT ?>/users/index.php'>Index</a></li>
+                        <li><a href='<?= SITE_ROOT ?>/users/new.php'>New</a></li>
+                    </ul>
+                </li>
 <?php
     }
 ?>
@@ -54,7 +60,7 @@ if (isset($_SESSION['xes_userid']) || isset($_SESSION['xes_adminid'])) {
                 <li><a href='<?= SITE_ROOT ?>/users/logout.php'>Logout</a></li>
             </ul>
             <div id='filterbox-container' class='navbar-form navbar-right'>
-                <input id='filterbox' type='text' class='form-control' placeholder='Search Inventory'>
+                <input id='filterbox' type='text' class='form-control' placeholder='Search Equipment'>
             </div>
         </div>
 <?php
