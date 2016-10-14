@@ -169,7 +169,7 @@ foreach ($updatelist as $key => $value) {
             echo " disabled>\n";
         }
     } elseif ($key == 'ECO') {
-        echo "<input type='text' maxlength='2' pattern'\d+' class='form-control' name='$key' placeholder='$key'";
+        echo "<input type='text' maxlength='2' pattern='\d+' class='form-control' name='$key' placeholder='$key'";
         if (!empty($data["$key"])) {
             echo " value='" . $data["$key"] . "'";
         } else {
