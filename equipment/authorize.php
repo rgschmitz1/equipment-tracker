@@ -11,14 +11,6 @@ if (!$users_api->authorizeAdmin()) {
 require_once('equipmentmanager.php');
 $equipment_api = new EquipmentManager();
 
-if (isset($_POST['authorize'])) {
-    if ($equipment_api->dbAuthorizeClaim($_POST['authorize'])) {
-        $equipment_api->dbClose();
-    } else {
-        $equipment_api->dbError();
-    }
-}
-
 // Query unapproved products after authorizing
 $results = $equipment_api->dbQueryUnapprovedProducts();
 ?>
@@ -32,7 +24,7 @@ $results = $equipment_api->dbQueryUnapprovedProducts();
             <tr>
                 <th>Serial</th>
                 <th>Description</th>
-                <th>Last Claimed</th>
+                <th>Claim Date</th>
                 <th>Location</th>
                 <th>Authorize</th>
             </tr>
@@ -42,15 +34,13 @@ $results = $equipment_api->dbQueryUnapprovedProducts();
 // Display a list of claimed products that needs to be approved by admin
 foreach ($results as $record) {
 ?>
-            <tr>
+            <tr id='<?= $record['claim_id'] ?>'>
                 <td><?= $record['serial'] ?></td>
                 <td><?= $record['description'] ?></td>
                 <td><?= $record['claim_date'] ?></td>
                 <td><?= $record['username'] ?></td>
-                <td style='padding-top: 0px; padding-bottom: 0px'>
-                    <form action='<?= $_SERVER['PHP_SELF'] ?>' method='post' role='form'>
-                        <button class='btn btn-primary' type='submit' name='authorize' value='<?= $record['claim_id'] ?>'>Accept</button>
-                    </form>
+                <td>
+                    <button style='padding-top: 0px; padding-bottom: 0px' class='btn btn-primary' onclick='accept("<?= $record['claim_id'] ?>")'>Accept</button>
                 </td>
             </tr>
 <?php
@@ -60,6 +50,10 @@ foreach ($results as $record) {
     </table>
 </div>
 <script>
+function accept(id) {
+    $('#' + id).hide();
+    $.ajax("processauthorize.php", {"data":{"authorize":id}, "method":"POST"});
+}
 $(document).ready(function(){
     // Add sticky header
     $('.sticky-header').floatThead({
