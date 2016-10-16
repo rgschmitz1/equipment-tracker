@@ -41,8 +41,7 @@ if (isset($_POST['submit'])) {
     // Check each input is set
     foreach ($updatelist as $key => $value) {
         $error["$key"] = false;
-        if ((!$admin_user) &&
-            ($key == 'Product' || $key == 'Serial' || $key == 'CfgNum' || $key == 'Revision' || $key == 'ECO')) {
+        if (!$admin_user && $key != 'Description') {
             continue;
         }
         if (($key == 'ECO') && (!isset($_POST["$key"]) || empty($_POST["$key"]))) {
@@ -115,71 +114,78 @@ foreach ($updatelist as $key => $value) {
     } else {
         echo "<div class='col-sm-3'>\n";
     }
-    if ($key == 'Serial') {
-        echo "<input type='text' maxlength='8' pattern='\d{8}' class='form-control' name='$key' placeholder='$key'";
-        if (!empty($data["$key"])) {
-            echo " value='" . $data["$key"] . "'";
-        }
-        if ($admin_user) {
-            echo " required>\n";
-        } else {
-            echo " disabled>\n";
-        }
-    } elseif ($key == 'Product') {
-        // Generate a list of active products
-        $products = $equipment_api->dbXesappsProducts();
-        echo "<select class='form-control' name='$key'";
-        if ($admin_user) {
-            echo ">\n";
-        } else {
-            echo " disabled>\n";
-        }
-        foreach ($products as $product => $prodvalue) {
-            if ($data["$key"] == $prodvalue[0]) {
-                echo "<option value='$prodvalue[0]' selected>$prodvalue[0]</option>\n";
-            } else {
-                echo "<option value='$prodvalue[0]'>$prodvalue[0]</option>\n";
+    switch ($key) {
+        case 'Serial':
+            echo "<input type='text' maxlength='8' pattern='\d{8}' class='form-control' name='$key' placeholder='$key'";
+            if (!empty($data["$key"])) {
+                echo " value='" . $data["$key"] . "'";
             }
-        }
-        echo "</select>\n";
-    } elseif ($key == 'Description') {
-        echo "<input type='text' maxlength='120' class='form-control' name='$key' placeholder='$key'";
-        if (!empty($data["$key"])) {
-            echo " value='" . $data["$key"] . "'";
-        }
-        echo " required>\n";
-    } elseif ($key == 'CfgNum') {
-        echo "<input type='text' maxlength='12' pattern='\d{8}-\d+' class='form-control' name='$key' placeholder='$key'";
-        if (!empty($data["$key"])) {
-            echo " value='" . $data["$key"] . "'";
-        }
-        if ($admin_user) {
+            if ($admin_user) {
+                echo " required>\n";
+            } else {
+                echo " disabled>\n";
+            }
+            break;
+        case 'Product':
+            // Generate a list of active products
+            $products = $equipment_api->dbXesappsProducts();
+            echo "<select class='form-control' name='$key'";
+            if ($admin_user) {
+                echo ">\n";
+            } else {
+                echo " disabled>\n";
+            }
+            foreach ($products as $product => $prodvalue) {
+                if ($data["$key"] == $prodvalue[0]) {
+                    echo "<option value='$prodvalue[0]' selected>$prodvalue[0]</option>\n";
+                } else {
+                    echo "<option value='$prodvalue[0]'>$prodvalue[0]</option>\n";
+                }
+            }
+            echo "</select>\n";
+            break;
+        case 'Description':
+            echo "<input type='text' maxlength='120' class='form-control' name='$key' placeholder='$key'";
+            if (!empty($data["$key"])) {
+                echo " value='" . $data["$key"] . "'";
+            }
             echo " required>\n";
-        } else {
-            echo " disabled>\n";
-        }
-    } elseif ($key == 'Revision') {
-        echo "<input type='text' maxlength='3' class='form-control' name='$key' placeholder='$key'";
-        if (!empty($data["$key"])) {
-            echo " value='" . $data["$key"] . "'";
-        }
-        if ($admin_user) {
-            echo " required>\n";
-        } else {
-            echo " disabled>\n";
-        }
-    } elseif ($key == 'ECO') {
-        echo "<input type='text' maxlength='2' pattern='\d+' class='form-control' name='$key' placeholder='$key'";
-        if (!empty($data["$key"])) {
-            echo " value='" . $data["$key"] . "'";
-        } else {
-            echo " value='0'";
-        }
-        if ($admin_user) {
-            echo " required>\n";
-        } else {
-            echo " disabled>\n";
-        }
+            break;
+        case 'CfgNum':
+            echo "<input type='text' maxlength='12' pattern='\d{8}-\d+' class='form-control' name='$key' placeholder='$key'";
+            if (!empty($data["$key"])) {
+                echo " value='" . $data["$key"] . "'";
+            }
+            if ($admin_user) {
+                echo " required>\n";
+            } else {
+                echo " disabled>\n";
+            }
+            break;
+        case 'Revision':
+            echo "<input type='text' maxlength='3' class='form-control' name='$key' placeholder='$key'";
+            if (!empty($data["$key"])) {
+                echo " value='" . $data["$key"] . "'";
+            }
+            if ($admin_user) {
+                echo " required>\n";
+            } else {
+                echo " disabled>\n";
+            }
+            break;
+        case 'ECO':
+            echo "<input type='text' maxlength='2' pattern='\d+' class='form-control' name='$key' placeholder='$key'";
+            if (!empty($data["$key"])) {
+                echo " value='" . $data["$key"] . "'";
+            } else {
+                echo " value='0'";
+            }
+            if ($admin_user) {
+                echo " required>\n";
+            } else {
+                echo " disabled>\n";
+            }
+            break;
     }
     // If error is present with input, display error icon in input box
     if (isset($error["$key"]) && ($error["$key"])) {

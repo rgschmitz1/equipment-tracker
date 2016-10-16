@@ -80,48 +80,55 @@ foreach ($list as $key) {
     } else {
         echo "<div class='col-sm-3'>\n";
     }
-    if ($key == 'Serial') {
-        echo "<input type='text' maxlength='8' pattern='\d{8}' class='form-control' name='$key' placeholder='$key'";
-        if (!empty($data["$key"])) {
-            echo " value='" . $data["$key"] . "'";
-        }
-        echo " required>\n";
-    } elseif ($key == 'Product') {
-        // Generate a list of active products
-        $products = $equipment_api->dbXesappsProducts();
-        echo "<select class='form-control' name='$key'>\n";
-        foreach ($products as $product => $value) {
-            if (!empty($data["$key"]) && ($data["$key"] == $value[0])) {
-                echo "<option value='$value[0]' selected>$value[0]</option>\n";
-            } else {
-                echo "<option value='$value[0]'>$value[0]</option>\n";
+    switch ($key) {
+        case 'Serial':
+            echo "<input type='text' maxlength='8' pattern='\d{8}' class='form-control' name='$key' placeholder='$key'";
+            if (!empty($data["$key"])) {
+                echo " value='" . $data["$key"] . "'";
             }
-        }
-        echo "</select>\n";
-    } elseif ($key == 'Description') {
-        echo "<input type='text' maxlength='120' class='form-control' name='$key' placeholder='$key'";
-        if (!empty($data["$key"])) {
-            echo " value='" . $data["$key"] . "'";
-        }
-        echo " required>\n";
-    } elseif ($key == 'CfgNum') {
-        echo "<input type='text' maxlength='12' pattern='\d{8}-\d+' class='form-control' name='$key' placeholder='$key'";
-        if (!empty($data["$key"])) {
-            echo " value='" . $data["$key"] . "'";
-        }
-        echo " required>\n";
-    } elseif ($key == 'Revision') {
-        echo "<input type='text' maxlength='3' class='form-control' name='$key' placeholder='$key'";
-        if (!empty($data["$key"])) {
-            echo " value='" . $data["$key"] . "'";
-        }
-        echo " required>\n";
-    } elseif ($key == 'ECO') {
-        echo "<input type='text' maxlength='2' pattern='\d+' class='form-control' name='$key' placeholder='$key'";
-        if (!empty($data["$key"])) {
-            echo " value='" . $data["$key"] . "'";
-        }
-        echo " required>\n";
+            echo " required>\n";
+            break;
+        case 'Product':
+            // Generate a list of active products
+            $products = $equipment_api->dbXesappsProducts();
+            echo "<select class='form-control' name='$key'>\n";
+            foreach ($products as $product => $value) {
+                if (!empty($data["$key"]) && ($data["$key"] == $value[0])) {
+                    echo "<option value='$value[0]' selected>$value[0]</option>\n";
+                } else {
+                    echo "<option value='$value[0]'>$value[0]</option>\n";
+                }
+            }
+            echo "</select>\n";
+            break;
+        case 'Description':
+            echo "<input type='text' maxlength='120' class='form-control' name='$key' placeholder='$key'";
+            if (!empty($data["$key"])) {
+                echo " value='" . $data["$key"] . "'";
+            }
+            echo " required>\n";
+            break;
+        case 'CfgNum':
+            echo "<input type='text' maxlength='12' pattern='\d{8}-\d+' class='form-control' name='$key' placeholder='$key'";
+            if (!empty($data["$key"])) {
+                echo " value='" . $data["$key"] . "'";
+            }
+            echo " required>\n";
+            break;
+        case 'Revision':
+            echo "<input type='text' maxlength='3' class='form-control' name='$key' placeholder='$key'";
+            if (!empty($data["$key"])) {
+                echo " value='" . $data["$key"] . "'";
+            }
+            echo " required>\n";
+            break;
+        case 'ECO':
+            echo "<input type='text' maxlength='2' pattern='\d+' class='form-control' name='$key' placeholder='$key'";
+            if (!empty($data["$key"])) {
+                echo " value='" . $data["$key"] . "'";
+            }
+            echo " required>\n";
+            break;
     }
     // If error is present with input, display error icon in input box
     if (isset($error["$key"]) && ($error["$key"])) {
