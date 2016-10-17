@@ -132,15 +132,16 @@ foreach ($updatelist as $key => $value) {
             echo "<select class='form-control' name='$key'";
             if ($admin_user) {
                 echo ">\n";
+                foreach ($products as $product => $prodvalue) {
+                    if ($data["$key"] == $prodvalue[0]) {
+                        echo "<option value='$prodvalue[0]' selected>$prodvalue[0]</option>\n";
+                    } else {
+                        echo "<option value='$prodvalue[0]'>$prodvalue[0]</option>\n";
+                    }
+                }
             } else {
                 echo " disabled>\n";
-            }
-            foreach ($products as $product => $prodvalue) {
-                if ($data["$key"] == $prodvalue[0]) {
-                    echo "<option value='$prodvalue[0]' selected>$prodvalue[0]</option>\n";
-                } else {
-                    echo "<option value='$prodvalue[0]'>$prodvalue[0]</option>\n";
-                }
+                echo "<option value='" . $data['Product'] . "' selected>" . $data['Product'] . "</option>\n";
             }
             echo "</select>\n";
             break;
