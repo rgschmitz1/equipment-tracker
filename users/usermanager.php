@@ -44,7 +44,7 @@ class UserManager extends DbManager {
             return;
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "SELECT `id` FROM `users` WHERE `username`=:username";
+        $query = "SELECT `id`, `status` FROM `users` WHERE `username`=:username";
         try {
             $sql = $dbc->prepare($query);
             $sql->bindParam(":username", $username);
@@ -87,14 +87,15 @@ class UserManager extends DbManager {
             return false;
         }
     }
-    // Delete user from database using id
-    function dbDeleteUser($id) {
+    // Alter user status using id
+    function dbAlterUserStatus($id, $status) {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "DELETE FROM `users` WHERE `id`=:id";
+        $query = "UPDATE `users` SET `status`=:status WHERE `id`=:id";
         try {
             $sql = $dbc->prepare($query);
             $sql->bindParam(":id", $id);
+            $sql->bindParam(":status", $status);
             $sql->execute();
             return true;
         } catch(Exception $ex) {
@@ -123,7 +124,7 @@ class UserManager extends DbManager {
     function dbQueryUsers() {
         $dbc = $this->dbConnect();
         $dbc->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "SELECT `id`, `username` FROM `users` WHERE `username` NOT LIKE 'Unclaimed' ORDER BY `username`";
+        $query = "SELECT `id`, `username`, `status` FROM `users` WHERE `username` NOT LIKE 'Unclaimed' ORDER BY `username`";
         try {
             $sql = $dbc->prepare($query);
             $sql->execute();

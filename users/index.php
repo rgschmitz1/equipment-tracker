@@ -25,7 +25,8 @@ if (isset($_GET['user'])) {
     <table class='table table-bordered table-striped table-hover sticky-header'>
         <thead>
             <tr>
-                <th>Username</th>
+                <th class='col-xs-11'>Username</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
@@ -33,31 +34,15 @@ if (isset($_GET['user'])) {
 foreach ($results as $record) {
 ?>
             <tr>
-                <td>
-                    <?= $record['username'] ?>
-
-                    <button style='float: right; padding-top: 0px; padding-bottom: 0px' class='btn btn-danger' type='button' data-toggle='modal' data-target='#deleteModal<?= $record['id'] ?>' data-backdrop='static'>Delete</button>
-                    <!-- Delete Modal -->
-                    <div id='deleteModal<?= $record['id'] ?>' class='modal' role='dialog'>
-                        <div class='modal-dialog'>
-                            <!-- Modal content-->
-                            <div class='modal-content'>
-                                <div class='modal-header'>
-                                    <button type='button' class='close' data-dismiss='modal'>&times;</button>
-                                    <h4 class='modal-title'>Delete User</h4>
-                                </div>
-                                <div class='modal-body'>
-                                    <p>Please confirm you would like to delete user <b><?= $record['username'] ?></b>.</p>
-                                </div>
-                                <div class='modal-footer'>
-                                    <form action='delete.php' method='post' role='form'>
-                                        <button type='submit' name='delete' value='<?= $record['id'] ?>' class='btn btn-danger'>Confirm</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </td>
+                <td><?= $record['username'] ?></td>
+<?php
+    echo "<td><button style='padding-top: 0px; padding-bottom: 0px' onclick='alterstatus(this, \"" . $record['id'] . "\")' ";
+    if (!empty($record['status']) && $record['status'] == 1) {
+        echo "class='btn btn-success'>Enabled</button></td>\n";
+    } else {
+        echo "class='btn btn-danger'>Disabled</button></td>\n";
+    }
+?>
             </tr>
 <?php
 }
@@ -66,6 +51,17 @@ foreach ($results as $record) {
     </table>
 </div>
 <script>
+function alterstatus(item, id) {
+    if (item.className == 'btn btn-success') {
+        item.className = 'btn btn-danger';
+        item.textContent = 'Disabled';
+        $.ajax('alterstatus.php', {'data':{'id':id, 'status':'0'}, 'method':'POST'});
+    } else {
+        item.className = 'btn btn-success';
+        item.textContent = 'Enabled';
+        $.ajax('alterstatus.php', {'data':{'id':id, 'status':'1'}, 'method':'POST'});
+    }
+}
 $(document).ready(function(){
     // Add sticky header
     $('.sticky-header').floatThead({

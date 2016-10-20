@@ -28,13 +28,15 @@ if (!isset($_SESSION['xes_userid']) && isset($_POST['submit'])) {
                 $error_msg = 'Invalid username entered, try again.';
             }
         }
-        if (isset($data) && !empty($data)) {
+        if (isset($data) && !empty($data) && isset($data['status']) && $data['status'] == 1) {
             // Login is OK, set the SESSION username and id, then redirect to homepage
             $_SESSION['fullname'] = $users_api->ldapSearch($user_username, '1');
             $_SESSION['xes_username'] = $user_username;
             $_SESSION['xes_userid'] = $data['id'];
             $users_api->dbClose();
             header('Location: ' . SITE_ROOT);
+        } elseif (isset($data) && !empty($data)) {
+            $error_msg = "User <b>$user_username</b> has been disabled, please email <a href='mailto:" . ADMIN_EMAIL . "'>" . ADMIN_EMAIL . "</a>.";
         } else {
             $error_msg = 'Invalid username entered, try again.';
         }

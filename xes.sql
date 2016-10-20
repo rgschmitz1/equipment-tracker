@@ -5,7 +5,7 @@ USE `mfgtest`;
 CREATE TABLE IF NOT EXISTS `users` (
     `id` INT AUTO_INCREMENT,
     `username` VARCHAR(30),
-    `active` TINYINT(1),
+    `status` TINYINT(1) DEFAULT '1',
     PRIMARY KEY (`id`)
 );
 
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `products` (
 CREATE TABLE IF NOT EXISTS `claim_history` (
     `id` INT AUTO_INCREMENT,
     `product_id` INT,
-    `user_id` INT DEFAULT 1,
+    `user_id` INT DEFAULT '1',
     `claim_date` DATETIME,
     `approved` TINYINT(1),
     PRIMARY KEY (`id`)
