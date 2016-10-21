@@ -63,13 +63,13 @@ function history(data) {
 function claim(data) {
     var username = "<?php if (isset($_SESSION['xes_username'])) echo $_SESSION['xes_username'] ?>";
     if (data['username'] == 'Unclaimed') {
-        claimurl = "<button class='btn btn-default'";
+        claimurl = "<button class='btn btn-default btn-no-pad'";
     } else if (data['username'] == username) {
-        claimurl = "<button class='btn btn-primary'";
+        claimurl = "<button class='btn btn-primary btn-no-pad'";
     } else {
-        claimurl = "<button class='btn btn-danger'";
+        claimurl = "<button class='btn btn-danger btn-no-pad'";
     }
-    claimurl += " style='padding-top: 0px; padding-bottom: 0px' id='claim' onclick='claimitem(this, \"" + data['product'] + "\", \"" + data['serial'] + "\")' value='" + data['product_id'] + "'>" + data['username'] + "</button>";
+    claimurl += " onclick='claimitem(this, \"" + data['product'] + "\", \"" + data['serial'] + "\")' value='" + data['product_id'] + "'>" + data['username'] + "</button>";
     return claimurl;
 }
 function claimitem(item, product, serial) {
@@ -88,8 +88,8 @@ function claimitem(item, product, serial) {
     var hrefid = '#history' + serial;
     $(hrefid).text(today);
     // Update location history
-    if (item.className == 'btn btn-primary') {
-        item.className = 'btn btn-default';
+    if (item.className == 'btn btn-primary btn-no-pad') {
+        item.className = 'btn btn-default btn-no-pad';
         item.textContent = 'Unclaimed';
         $.ajax("claim.php", {"data":{"claim":item.value, "user":"1"}, "method":"POST"});
         // Update product tracking
@@ -103,7 +103,7 @@ if ($present_site != SITE_ROOT . '/equipment/index.php') {
 }
 ?>
     } else {
-        item.className = 'btn btn-primary';
+        item.className = 'btn btn-primary btn-no-pad';
         item.textContent = username;
         $.ajax("claim.php", {"data":{"claim":item.value, "user":userid, "product":product, "serial":serial}, "method":"POST"});
         // Update product tracking
@@ -113,7 +113,7 @@ if ($present_site != SITE_ROOT . '/equipment/index.php') {
 function edit(data) {
     editurl = "<form action='modify.php' method='get' role='form'>";
     editurl += "<input type='hidden' name='navaftermod' value='<?= $_SERVER['PHP_SELF'] ?>'>";
-    editurl += "<button style='padding-top: 0px; padding-bottom: 0px' class='btn btn-default' type='submit' name='item_id' value='" + data['product_id'] + "'>Edit</button>";
+    editurl += "<button class='btn btn-default btn-no-pad' type='submit' name='item_id' value='" + data['product_id'] + "'>Edit</button>";
     editurl += "</form>";
     return editurl;
 }

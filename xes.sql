@@ -37,8 +37,8 @@ CREATE TABLE IF NOT EXISTS `claim_history` (
     PRIMARY KEY (`id`)
 );
 
-INSERT INTO `users` (`id`, `username`)
-    VALUES ('1', 'Unclaimed')
+INSERT INTO `users` (`id`, `username`, `status`)
+    VALUES ('1', 'Unclaimed', '0')
     ON DUPLICATE KEY UPDATE `id` = `id`;
 INSERT INTO `adminusers` (`id`, `username`, `password`)
     VALUES ('1', 'admin', '$2y$10$U8/uwfOnU.jQGwGk7cqWf.t7KVZjE9C.IH9GGH4nRv3plFzLz6mWm')

@@ -15,6 +15,15 @@ body {
   /* Margin bottom by footer height */
   margin-bottom:85px;
 }
+/* Show custom style for unauthrized claims */
+.not-authorized {
+  background-color:red;
+  color:white;
+}
+.btn-no-pad {
+  padding-top:0px;
+  padding-bottom:0px;
+}
 .footer {
   position:absolute;
   bottom:0;

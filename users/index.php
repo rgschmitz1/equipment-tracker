@@ -36,11 +36,11 @@ foreach ($results as $record) {
             <tr>
                 <td><?= $record['username'] ?></td>
 <?php
-    echo "<td><button style='padding-top: 0px; padding-bottom: 0px' onclick='alterstatus(this, \"" . $record['id'] . "\")' ";
+    echo "<td><button onclick='alterstatus(this, \"" . $record['id'] . "\")' ";
     if (!empty($record['status']) && $record['status'] == 1) {
-        echo "class='btn btn-success'>Enabled</button></td>\n";
+        echo "class='btn btn-success btn-no-pad'>Enabled</button></td>\n";
     } else {
-        echo "class='btn btn-danger'>Disabled</button></td>\n";
+        echo "class='btn btn-danger btn-no-pad'>Disabled</button></td>\n";
     }
 ?>
             </tr>

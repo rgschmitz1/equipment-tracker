@@ -40,7 +40,7 @@ foreach ($results as $record) {
                 <td><?= $record['claim_date'] ?></td>
                 <td><?= $record['username'] ?></td>
                 <td>
-                    <button style='padding-top: 0px; padding-bottom: 0px' class='btn btn-primary' onclick='accept("<?= $record['claim_id'] ?>")'>Accept</button>
+                    <button class='btn btn-primary btn-no-pad' onclick='accept("<?= $record['claim_id'] ?>")'>Accept</button>
                 </td>
             </tr>
 <?php
@@ -52,7 +52,7 @@ foreach ($results as $record) {
 <script>
 function accept(id) {
     $('#' + id).hide();
-    $.ajax("processauthorize.php", {"data":{"authorize":id}, "method":"POST"});
+    $.ajax('processauthorize.php', {'data':{'authorize':id}, 'method':'POST'});
 }
 $(document).ready(function(){
     // Add sticky header

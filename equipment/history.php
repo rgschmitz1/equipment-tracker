@@ -29,7 +29,7 @@ foreach ($results as $record) {
     } else if ($record['approved']) {
         echo "<td>Yes</td>\n";
     } else {
-        echo "<td style='background-color:red; color:white'>No</td>\n";
+        echo "<td class='not-authorized'>No</td>\n";
     }
     echo "</tr>\n";
 }
