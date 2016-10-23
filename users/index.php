@@ -26,7 +26,10 @@ if (isset($_GET['user'])) {
         <thead>
             <tr>
                 <th class='col-xs-11'>Username</th>
-                <th>Status</th>
+                <th>
+                    Status
+                    <span class='glyphicon glyphicon-info-sign' data-toggle='tooltip' data-placement='left' title='Click status button to enable/disable user.'></span>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -52,12 +55,12 @@ foreach ($results as $record) {
 </div>
 <script>
 function alterstatus(item, id) {
-    if (item.className == 'btn btn-success') {
-        item.className = 'btn btn-danger';
+    if (item.className == 'btn btn-success btn-no-pad') {
+        item.className = 'btn btn-danger btn-no-pad';
         item.textContent = 'Disabled';
         $.ajax('alterstatus.php', {'data':{'id':id, 'status':'0'}, 'method':'POST'});
     } else {
-        item.className = 'btn btn-success';
+        item.className = 'btn btn-success btn-no-pad';
         item.textContent = 'Enabled';
         $.ajax('alterstatus.php', {'data':{'id':id, 'status':'1'}, 'method':'POST'});
     }

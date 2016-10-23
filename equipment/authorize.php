@@ -26,7 +26,10 @@ $results = $equipment_api->dbQueryUnapprovedProducts();
                 <th>Description</th>
                 <th>Claim Date</th>
                 <th>Location</th>
-                <th>Authorize</th>
+                <th>
+                    Authorize
+                    <span class='glyphicon glyphicon-info-sign' data-toggle='tooltip' data-placement='left' title='Click accept button to authorize claim.'></span>
+                </th>
             </tr>
         </thead>
         <tbody>

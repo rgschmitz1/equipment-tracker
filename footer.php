@@ -8,6 +8,9 @@ require_once('appvars.php')
     </div>
 </footer>
 <script>
+$(function(){
+    $('[data-toggle="tooltip"]').tooltip()
+});
 $(document).ready(function(){
     // Hide product filter on non-equipment pages
     var currentLocation = window.location.href;

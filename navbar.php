@@ -29,14 +29,6 @@ if (isset($_SESSION['xes_userid']) || isset($_SESSION['xes_adminid'])) {
                 <li class='dropdown'>
                     <a href='<?= SITE_ROOT ?>/equipment/index.php' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-expanded='false'>Equipment<span class='caret'></span></a>
                     <ul class='dropdown-menu' role='menu'>
-<?php
-    if ($admin_user) {
-?>
-                        <li><a href='<?= SITE_ROOT ?>/equipment/authorize.php'>Authorize</a></li>
-                        <li class='divider'></li>
-<?php
-    }
-?>
                         <li><a href='<?= SITE_ROOT ?>/equipment/index.php'>Index</a></li>
                         <li><a href='<?= SITE_ROOT ?>/equipment/claimedindex.php'>Claimed</a></li>
                         <li><a href='<?= SITE_ROOT ?>/equipment/new.php'>New</a></li>
@@ -52,6 +44,7 @@ if (isset($_SESSION['xes_userid']) || isset($_SESSION['xes_adminid'])) {
                         <li><a href='<?= SITE_ROOT ?>/users/new.php'>New</a></li>
                     </ul>
                 </li>
+                <li><a href='<?= SITE_ROOT ?>/equipment/authorize.php'>Authorize</a></li>
 <?php
     }
 ?>

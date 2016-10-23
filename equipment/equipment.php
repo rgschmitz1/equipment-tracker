@@ -98,7 +98,9 @@ function claimitem(item, product, serial) {
 $present_site = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
 if ($present_site != SITE_ROOT . '/equipment/index.php') {
 ?>
-        location.reload();
+        $(document).ajaxStop(function(){
+            location.reload();
+        });
 <?php
 }
 ?>
