@@ -4,7 +4,7 @@ require_once('appvars.php')
 <footer class='panel-footer footer'>
     <div class='container'>
         <p>&copy; 2016 - Extreme Engineering Solutions, Inc</p>
-        <p><a href='https://redmine-hardware-engineering.xes-mad.com/projects/engapps/issues/new?issue[category_id]=9'>Feedback</a></p>
+        <p><a href='https://redmine-hardware-engineering.xes-mad.com/projects/engapps/issues/new?issue[category_id]=9' target='_blank'>Feedback</a></p>
     </div>
 </footer>
 <script>

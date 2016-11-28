@@ -55,10 +55,10 @@ if ($users_api->authorizeAdmin()) {
 <script>
 // DataTables configuration
 function serial(data) {
-    return "<a href='http://webapps.xes-mad.com/support/perl/apps/prodTracking/mfg.pl?mode=display&amp;serNum=" + data['serial'] + "&amp;product=" + data['product'] + "'>" + data['serial'] + "</a>";
+    return "<a href='http://webapps.xes-mad.com/support/perl/apps/prodTracking/mfg.pl?mode=display&amp;serNum=" + data['serial'] + "&amp;product=" + data['product'] + "' target='_blank'>" + data['serial'] + "</a>";
 }
 function history(data) {
-    return "<a id='history" + data['serial'] + "' href='history.php?id=" + data['product_id'] + "&amp;serial=" + data['serial'] + "'>" + data['claim_date'].substring(0, 10) + "</a>";
+    return "<a id='history" + data['serial'] + "' href='history.php?id=" + data['product_id'] + "&amp;serial=" + data['serial'] + "' target='_blank'>" + data['claim_date'].substring(0, 10) + "</a>";
 }
 function claim(data) {
     var username = "<?php if (isset($_SESSION['xes_username'])) echo $_SESSION['xes_username'] ?>";
@@ -75,8 +75,6 @@ function claim(data) {
 function claimitem(item, product, serial) {
     var userid = "<?php if (isset($_SESSION['xes_userid'])) echo $_SESSION['xes_userid'] ?>";
     var username = "<?php if (isset($_SESSION['xes_username'])) echo $_SESSION['xes_username'] ?>";
-    var fullname = "<?php if (isset($_SESSION['fullname'])) echo $_SESSION['fullname'] ?>";
-    var claimurl = 'http://webapps.xes-mad.com/support/perl/apps/prodTracking/mfg.pl';
     // Update Last Claimed field text
     var today = new Date();
     var dd = today.getDate();
@@ -92,8 +90,6 @@ function claimitem(item, product, serial) {
         item.className = 'btn btn-default btn-no-pad';
         item.textContent = 'Unclaimed';
         $.ajax("claim.php", {"data":{"claim":item.value, "user":"1"}, "method":"POST"});
-        // Update product tracking
-        $.ajax(claimurl, {"data":{"mode":"display", "serNum":serial, "product":product, "mode":"Claim", "location":"<?= SITE_TITLE ?>"}, "method":"GET"});
 <?php
 $present_site = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
 if ($present_site != SITE_ROOT . '/equipment/index.php') {
@@ -108,8 +104,6 @@ if ($present_site != SITE_ROOT . '/equipment/index.php') {
         item.className = 'btn btn-primary btn-no-pad';
         item.textContent = username;
         $.ajax("claim.php", {"data":{"claim":item.value, "user":userid, "product":product, "serial":serial}, "method":"POST"});
-        // Update product tracking
-        $.ajax(claimurl, {"data":{"mode":"display", "serNum":serial, "product":product, "mode":"Claim", "location":fullname}, "method":"GET"});
     }
 }
 function edit(data) {
