@@ -1,6 +1,6 @@
 # equipment-tracker
 
-A simple equipment tracking system written in php
+An equipment tracking system written in php
 
 ## General Setup
 
