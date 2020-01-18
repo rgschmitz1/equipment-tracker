@@ -6,6 +6,6 @@ define('SESSION_DIR', '/tmp/mfgtest');
 define('DB_HOST', 'engapps');
 define('DB_NAME', 'mfgtest');
 define('DB_USER', 'mfgtest');
-define('DB_PASS', 'w1-r_37B');
+define('DB_PASS', '*******');
 // Define admin email
 define('ADMIN_EMAIL', 'bschmitz@xes-inc.com');
