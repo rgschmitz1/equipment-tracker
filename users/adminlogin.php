@@ -1,7 +1,5 @@
 <?php
 require_once('../header.php');
-// This is required for older versions of php, this can be removed when php is updated
-require_once('passwordLib.php');
 
 // Clear error message
 $error_msg = '';
@@ -27,7 +25,8 @@ if (!isset($_SESSION['xes_adminid']) && isset($_POST['submit'])) {
                 $_SESSION['xes_username'] = $user_username;
                 $_SESSION['xes_adminid'] = $data['id'];
                 $users_api->dbClose();
-                header('Location: ' . SITE_ROOT);
+                echo "<script>window.location = '" . SITE_ROOT . "'</script>";
+                //header('Location: ' . SITE_ROOT);
             } else {
                 $error_msg = 'You must enter a valid username and password to login.';
             }

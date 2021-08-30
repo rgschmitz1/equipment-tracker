@@ -41,5 +41,5 @@ INSERT INTO `users` (`id`, `username`, `status`)
     VALUES ('1', 'Unclaimed', '0')
     ON DUPLICATE KEY UPDATE `id` = `id`;
 INSERT INTO `adminusers` (`id`, `username`, `password`)
-    VALUES ('1', 'admin', '$2y$10$U8/uwfOnU.jQGwGk7cqWf.t7KVZjE9C.IH9GGH4nRv3plFzLz6mWm')
+    VALUES ('1', 'admin', '$2y$12$eMhe/x0NWz5e5TVz6BvZe.4cF3eW4BWe3s/GU4HnOkNxfssi5efSu')
     ON DUPLICATE KEY UPDATE `id` = `id`;

@@ -26,7 +26,8 @@ class UserManager extends DbManager {
     }
     // Email admin user
     function emailAdmin($username, $product, $serial) {
-        $fullname = $this->ldapSearch($username, '1');
+        $fullname = $username;
+        //$fullname = $this->ldapSearch($username, '1');
         $to = ADMIN_EMAIL;
         $subject = SITE_TITLE . ' Webapp Checkout';
         $message = '<html><body>';

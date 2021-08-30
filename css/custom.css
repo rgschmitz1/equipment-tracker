@@ -29,7 +29,7 @@ body {
   bottom:0;
   width:100%;
   /* Set the fixed height of the footer here */
-  height:75px;
+  //height:75px;
 }
 .dropdown:hover .dropdown-menu {
   /* Trigger drop down on curser hover */

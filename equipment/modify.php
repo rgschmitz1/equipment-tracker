@@ -5,7 +5,8 @@ $equipment_api = new EquipmentManager();
 $admin_user = $users_api->authorizeAdmin();
 
 if (!isset($_GET['item_id']) && !isset($_POST['item_id'])) {
-    header('Location: index.php');
+    echo "<script>window.location = 'index.php'</script>";
+    //header('Location: index.php');
 } elseif (isset($_GET['item_id']) && !empty($_GET['item_id'])) {
     $nav_after_mod = $_GET['navaftermod'];
     $itemid = $_GET['item_id'];
@@ -73,7 +74,8 @@ if (isset($_POST['submit'])) {
             $result = $equipment_api->dbModifyProduct($itemid, $product, $description, $serial, $cfgnum, $revision, $eco);
             if ($result == 1) {
                 $equipment_api->dbClose();
-                header("Location: $nav_after_mod?item");
+                echo "<script>window.location = '" . $nav_after_mod . "?item'</script>";
+                //header("Location: $nav_after_mod?item");
             } else {
                 $equipment_api->dbError();
             }
@@ -127,23 +129,15 @@ foreach ($updatelist as $key => $value) {
             }
             break;
         case 'Product':
-            // Generate a list of active products
-            $products = $equipment_api->dbXesappsProducts();
-            echo "<select class='form-control' name='$key'";
+            echo "<input type='text' maxlength='30' class='form-control' name='$key' placeholder='$key'";
+            if (!empty($data["$key"])) {
+                echo " value='" . $data["$key"] . "'";
+            }
             if ($admin_user) {
-                echo ">\n";
-                foreach ($products as $product => $prodvalue) {
-                    if ($data["$key"] == $prodvalue[0]) {
-                        echo "<option value='$prodvalue[0]' selected>$prodvalue[0]</option>\n";
-                    } else {
-                        echo "<option value='$prodvalue[0]'>$prodvalue[0]</option>\n";
-                    }
-                }
+                echo " required>\n";
             } else {
                 echo " disabled>\n";
-                echo "<option value='" . $data['Product'] . "' selected>" . $data['Product'] . "</option>\n";
             }
-            echo "</select>\n";
             break;
         case 'Description':
             echo "<input type='text' maxlength='120' class='form-control' name='$key' placeholder='$key'";
@@ -153,7 +147,7 @@ foreach ($updatelist as $key => $value) {
             echo " required>\n";
             break;
         case 'CfgNum':
-            echo "<input type='text' maxlength='12' pattern='\d{8}-\d+' class='form-control' name='$key' placeholder='$key'";
+            echo "<input type='text' maxlength='12' pattern='\d+' class='form-control' name='$key' placeholder='$key'";
             if (!empty($data["$key"])) {
                 echo " value='" . $data["$key"] . "'";
             }

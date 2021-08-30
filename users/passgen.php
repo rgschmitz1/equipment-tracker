@@ -1,6 +1,4 @@
 <?php
-// This is required for older versions of php, this can be removed when php is updated
-require_once('passwordLib.php');
 if (isset($_POST['submit'])) {
     if($_POST['password'] == $_POST['verifypassword']) {
         $options = array(

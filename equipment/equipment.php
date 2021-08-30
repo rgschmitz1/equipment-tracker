@@ -55,7 +55,7 @@ if ($users_api->authorizeAdmin()) {
 <script>
 // DataTables configuration
 function serial(data) {
-    return "<a href='http://webapps.xes-mad.com/support/perl/apps/prodTracking/mfg.pl?mode=display&amp;serNum=" + data['serial'] + "&amp;product=" + data['product'] + "' target='_blank'>" + data['serial'] + "</a>";
+    return data['serial'];
 }
 function history(data) {
     return "<a id='history" + data['serial'] + "' href='history.php?id=" + data['product_id'] + "&amp;serial=" + data['serial'] + "' target='_blank'>" + data['claim_date'].substring(0, 10) + "</a>";

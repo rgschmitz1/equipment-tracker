@@ -1,11 +1,7 @@
 <?php
 require_once('../header.php');
 if (!$users_api->authorizeAdmin()) {
-    function shutdown()
-    {
-        require_once('../footer.php');
-    }
-    register_shutdown_function('shutdown');
+    require_once('../footer.php');
     exit("<div class='container'>You must be an administrative user to access this page.</div>\n");
 }
 
