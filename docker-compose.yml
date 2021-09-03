@@ -7,7 +7,7 @@ services:
       - mariadb
     restart: always
     volumes:
-      - ./site:/var/www/html
+      - ./site:/var/www
   nginx:
     build: ./nginx
     container_name: nginx
@@ -17,7 +17,7 @@ services:
       - '80:80'
     restart: always
     volumes:
-      - ./site:/var/www/html
+      - ./site:/var/www
   mariadb:
     build: ./mariadb
     container_name: mariadb
@@ -29,3 +29,5 @@ services:
     ports:
       - '3306:3306'
     restart: always
+    volumes:
+      - ./site/xes.sql:/docker-entrypoint-initdb.d/import.sql
