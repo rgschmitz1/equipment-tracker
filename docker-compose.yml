@@ -1,0 +1,31 @@
+version: '3'
+services:
+  php:
+    build: ./php
+    container_name: php
+    depends_on:
+      - mariadb
+    restart: always
+    volumes:
+      - ./site:/var/www/html
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    depends_on:
+      - php
+    ports:
+      - '80:80'
+    restart: always
+    volumes:
+      - ./site:/var/www/html
+  mariadb:
+    build: ./mariadb
+    container_name: mariadb
+    environment:
+      - MARIADB_RANDOM_ROOT_PASSWORD=yes
+      - MARIADB_DATABASE=mfgtest
+      - MARIADB_USER=mfgtest
+      - MARIADB_PASSWORD=Qty[U0Fy;hff9g3&~~Xb8bbqD]cMGM>x
+    ports:
+      - '3306:3306'
+    restart: always
